@@ -87,11 +87,7 @@ class Credly:
         return markdown
 
     def get_markdown(self):
-        badges_html = (
-            self.return_badges_html()[0:NUMBER_LAST_BADGES]
-            if NUMBER_LAST_BADGES > 0
-            else self.return_badges_html()
-        )
+        badges_html = self.return_badges_html()
         return self.generate_md_format(
             [self.convert_to_dict(badge) for badge in badges_html]
         )
