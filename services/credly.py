@@ -32,11 +32,8 @@ class Credly:
         return "most_popular" if self.SORT == "POPULAR" else "-state_updated_at"
 
     def convert_to_dict(self, htmlBadge):
-        soupBadge = BeautifulSoup(str(htmlBadge), "lxml")
-        img = soupBadge.findAll(
-            "img", {"class": "cr-standard-grid-item-content__image"}
-        )[0]
-        issuer = soupBadge.find("div", {"class": "cr-standard-grid-item-content__issuer"}).text.strip()
+        issuer_div = htmlBadge.find("div", {"class": "cr-standard-grid-item-content__issuer"})
+        issuer = issuer_div.text.strip() if issuer_div else "Unknown issuer"
         return {
             "title": str(htmlBadge["title"]).replace('"', '\\"'),
             "href": self.BASE_URL + htmlBadge["href"],
