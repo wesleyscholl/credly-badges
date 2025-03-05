@@ -55,22 +55,36 @@ class Credly:
         if not badges:
             return None
         sorted_badges = sorted(badges, key=lambda x: x['issuer'])
-        rows = []
-        for i in range(0, len(sorted_badges), 5):
-            row = sorted_badges[i:i + 5]
-            rows.append(row)
-        table = '<table width="100%">\n'
-        for row in rows:
-            table += '  <tr>\n'
-            for badge in row:
-                table += f'    <td width="20%"><a href="{badge["href"]}"><img src="{badge["img"]}" /></a></td>\n'
-            table += '  </tr>\n'
-            table += '  <tr>\n'
-            for badge in row:
-                table += f'    <td align="center" width="20%"><a href="{badge["href"]}">{badge["title"]} - {badge["issuer"]}</a></td>\n'
-            table += '  </tr>\n'
-        table += '</table>'
-        return table
+        grouped_badges = {}
+        for badge in sorted_badges:
+            issuer = badge['issuer']
+            if issuer not in grouped_badges:
+                grouped_badges[issuer] = []
+            grouped_badges[issuer].append(badge)
+
+        markdown = ""
+        for issuer, badges in grouped_badges.items():
+            markdown += f"### 🐧 {issuer}\n\n"
+            markdown += '<table width="100%">\n'
+            rows = []
+            for i in range(0, len(badges), 5):
+                row = badges[i:i + 5]
+                rows.append(row)
+            for row in rows:
+                markdown += '  <tr>\n'
+                for badge in row:
+                    markdown += f'    <td width="20%"><a href="{badge["href"]}"><img src="{badge["img"]}" /></a></td>\n'
+                for _ in range(5 - len(row)):
+                    markdown += '    <td width="20%"></td>\n'
+                markdown += '  </tr>\n'
+                markdown += '  <tr>\n'
+                for badge in row:
+                    markdown += f'    <td align="center" width="20%"><a href="{badge["href"]}">{badge["title"]} - {badge["issuer"]}</a></td>\n'
+                for _ in range(5 - len(row)):
+                    markdown += '    <td align="center" width="20%"></td>\n'
+                markdown += '  </tr>\n'
+            markdown += '</table>\n\n'
+        return markdown
 
     def get_markdown(self):
         badges_html = (
