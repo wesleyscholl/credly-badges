@@ -36,10 +36,14 @@ class Credly:
         img = soupBadge.findAll(
             "img", {"class": "cr-standard-grid-item-content__image"}
         )[0]
+        issuer = soupBadge.find(
+            "div", {"class": "cr-standard-grid-item-content__subtitle"}
+        ).text.strip()
         return {
             "title": str(htmlBadge["title"]).replace('"', '\\"'),
             "href": self.BASE_URL + htmlBadge["href"],
             "img": img["src"].replace("110x110", f"{BADGE_SIZE}x{BADGE_SIZE}"),
+            "issuer": issuer,
         }
 
     def return_badges_html(self):
@@ -50,12 +54,23 @@ class Credly:
     def generate_md_format(self, badges):
         if not badges:
             return None
-        return "\n".join(
-            map(
-                lambda it: f"[![{it['title']}]({it['img']})]({it['href']} \"{it['title']}\")",
-                badges,
-            )
-        )
+        sorted_badges = sorted(badges, key=lambda x: x['issuer'])
+        rows = []
+        for i in range(0, len(sorted_badges), 5):
+            row = sorted_badges[i:i + 5]
+            rows.append(row)
+        table = '<table width="100%">\n'
+        for row in rows:
+            table += '  <tr>\n'
+            for badge in row:
+                table += f'    <td width="20%"><a href="{badge["href"]}"><img src="{badge["img"]}" /></a></td>\n'
+            table += '  </tr>\n'
+            table += '  <tr>\n'
+            for badge in row:
+                table += f'    <td align="center" width="20%"><a href="{badge["href"]}">{badge["title"]} - {badge["issuer"]}</a></td>\n'
+            table += '  </tr>\n'
+        table += '</table>'
+        return table
 
     def get_markdown(self):
         badges_html = (
