@@ -23,10 +23,24 @@ class Credly:
         if self.FILE:
             with open(self.FILE, "r") as f:
                 return f.read()
-        url = f"{self.BASE_URL}/users/{self.USER}/badges?sort={self.sort_by()}"
-        response = requests.get(url)
+        
+        all_data = ""
+        page = 1
+        while True:
+            url = f"{self.BASE_URL}/users/{self.USER}/badges?page={page}&sort={self.sort_by()}"
+            response = requests.get(url)
+            data = response.text
+            all_data += data
 
-        return response.text
+            soup = BeautifulSoup(data, "lxml")
+            next_page = soup.find("a", {"rel": "next"})
+            if not next_page:
+                break
+
+            page += 1
+            time.sleep(1)
+
+        return all_data
 
     def sort_by(self):
         return "most_popular" if self.SORT == "POPULAR" else "-state_updated_at"
