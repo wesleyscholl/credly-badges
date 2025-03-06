@@ -31,7 +31,6 @@ class Credly:
             url = f"{self.BASE_URL}/users/{self.USER}/badges?page={page}&sort={self.sort_by()}"
             response = requests.get(url)
             data = response.text
-            print(data)
 
             soup = BeautifulSoup(data, "lxml")
             badges = soup.findAll("a", {"class": "cr-public-earned-badge-grid-item"})
@@ -69,6 +68,7 @@ class Credly:
 
     def return_badges_html(self):
         data = self.data_from_html()
+        print(data)
         soup = BeautifulSoup(data, "lxml")
         return soup.findAll("a", {"class": "cr-public-earned-badge-grid-item"})
 
