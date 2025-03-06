@@ -99,6 +99,7 @@ class Credly:
                     markdown += '    <td align="center" width="20%"></td>\n'
                 markdown += '  </tr>\n'
             markdown += '</table>\n\n'
+        print(markdown)
         return markdown
 
     def get_markdown(self):
