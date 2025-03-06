@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 import lxml, requests
+import time
 
 from settings import (
     CREDLY_SORT,
