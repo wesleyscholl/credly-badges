@@ -84,8 +84,20 @@ class Credly:
                 grouped_badges[issuer] = []
             grouped_badges[issuer].append(badge)
 
-        markdown = ""
+        # Generate the list of issuing organizations with anchor links
+        markdown = "## List of Issuing Organizations\n\n"
+        markdown += "| Issuing Organization | Verified |\n"
+        markdown += "|-----------------------|----------|\n"
+        for issuer in grouped_badges.keys():
+            # Create an anchor link for each organization
+            anchor = issuer.lower().replace(" ", "-")
+            markdown += f"| [{issuer}](#{anchor}) | ✅ |\n"
+        markdown += "\n"
+
+        # Generate the badge tables for each organization
         for issuer, badges in grouped_badges.items():
+            # Add an anchor for the organization section
+            anchor = issuer.lower().replace(" ", "-")
             markdown += f"### {issuer}\n\n"
             markdown += '<table width="100%">\n'
             rows = []
