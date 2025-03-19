@@ -86,7 +86,7 @@ class Credly:
 
         markdown = ""
         for issuer, badges in grouped_badges.items():
-            markdown += f"### 🐧 {issuer}\n\n"
+            markdown += f"### {issuer}\n\n"
             markdown += '<table width="100%">\n'
             rows = []
             for i in range(0, len(badges), 5):
