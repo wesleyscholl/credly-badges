@@ -145,9 +145,8 @@ class Credly:
                         markdown += '    <td align="center" width="20%"></td>\n'
                     markdown += '  </tr>\n'
                 markdown += '</table>\n\n'
-                markdown += '</details>\n\n'
-                markdown += '<br>'
-                markdown += '\n'
+                markdown += '</details>'
+                markdown += '<br>\n\n'
 
         print(markdown)
         return markdown
