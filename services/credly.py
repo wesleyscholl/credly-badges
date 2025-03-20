@@ -146,7 +146,7 @@ class Credly:
                     markdown += '  </tr>\n'
                 markdown += '</table>\n\n'
                 markdown += '</details>\n\n'
-                markdown += '<br>\n'
+                markdown += '<br>\n\n'
 
         print(markdown)
         return markdown
