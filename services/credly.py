@@ -84,8 +84,11 @@ class Credly:
                 grouped_badges[issuer] = []
             grouped_badges[issuer].append(badge)
 
+        # Count and add the number of badges to the markdown
+        markdown = f"## Total Badges: ({len(badges)})\n\n"
+
         # Generate the list of issuing organizations with anchor links
-        markdown = "## List of Issuing Organizations\n\n"
+        markdown += "## List of Issuing Organizations\n\n"
         markdown += "| Issuing Organization | Verified |\n"
         markdown += "|-----------------------|----------|\n"
         for issuer in grouped_badges.keys():
@@ -99,25 +102,51 @@ class Credly:
             # Add an anchor for the organization section
             anchor = issuer.lower().replace(" ", "-")
             markdown += f"### {issuer}\n\n"
+            # Main table for the first 5 badges
             markdown += '<table width="100%">\n'
-            rows = []
-            for i in range(0, len(badges), 5):
-                row = badges[i:i + 5]
-                rows.append(row)
-            for row in rows:
-                markdown += '  <tr>\n'
-                for badge in row:
-                    markdown += f'    <td width="20%"><a href="{badge["href"]}"><img src="{badge["img"]}" /></a></td>\n'
-                for _ in range(5 - len(row)):
-                    markdown += '    <td width="20%"></td>\n'
-                markdown += '  </tr>\n'
-                markdown += '  <tr>\n'
-                for badge in row:
-                    markdown += f'    <td align="center" width="20%"><a href="{badge["href"]}">{badge["title"]} - {badge["issuer"]}</a></td>\n'
-                for _ in range(5 - len(row)):
-                    markdown += '    <td align="center" width="20%"></td>\n'
-                markdown += '  </tr>\n'
+            first_row = badges[:5]  # Get the first 5 badges
+            markdown += '  <tr>\n'
+            for badge in first_row:
+                markdown += f'    <td width="20%"><a href="{badge["href"]}"><img src="{badge["img"]}" /></a></td>\n'
+            for _ in range(5 - len(first_row)):
+                markdown += '    <td width="20%"></td>\n'
+            markdown += '  </tr>\n'
+            markdown += '  <tr>\n'
+            for badge in first_row:
+                markdown += f'    <td align="center" width="20%"><a href="{badge["href"]}">{badge["title"]} - {badge["issuer"]}</a></td>\n'
+            for _ in range(5 - len(first_row)):
+                markdown += '    <td align="center" width="20%"></td>\n'
+            markdown += '  </tr>\n'
             markdown += '</table>\n\n'
+
+            # If there are more than 5 badges, create a "more" dropdown
+            if len(badges) > 5:
+                markdown += '<br>\n'
+                markdown += f'<details>\n  <summary>More {issuer}</summary>\n\n'
+                markdown += '<table width="100%">\n'
+                
+                # Process remaining badges in groups of 5
+                remaining_badges = badges[5:]
+                rows = []
+                for i in range(0, len(remaining_badges), 5):
+                    row = remaining_badges[i:i + 5]
+                    rows.append(row)
+                for row in rows:
+                    markdown += '  <tr>\n'
+                    for badge in row:
+                        markdown += f'    <td width="20%"><a href="{badge["href"]}"><img src="{badge["img"]}" /></a></td>\n'
+                    for _ in range(5 - len(row)):
+                        markdown += '    <td width="20%"></td>\n'
+                    markdown += '  </tr>\n'
+                    markdown += '  <tr>\n'
+                    for badge in row:
+                        markdown += f'    <td align="center" width="20%"><a href="{badge["href"]}">{badge["title"]} - {badge["issuer"]}</a></td>\n'
+                    for _ in range(5 - len(row)):
+                        markdown += '    <td align="center" width="20%"></td>\n'
+                    markdown += '  </tr>\n'
+                markdown += '</table>\n\n'
+                markdown += '</details>\n\n'
+
         print(markdown)
         return markdown
 
