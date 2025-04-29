@@ -94,6 +94,8 @@ class Credly:
         for issuer in grouped_badges.keys():
             # Create an anchor link for each organization
             anchor = issuer.lower().replace(" ", "-")
+            # Get the total number of badges for the organization
+            print(grouped_badges)
             markdown += f"| [{issuer}](#{anchor}) | ✅ | | {len(grouped_badges[issuer])} |\n"
         markdown += "\n"
 
