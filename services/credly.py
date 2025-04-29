@@ -100,6 +100,21 @@ class Credly:
             markdown += f"| [{issuer}](#{anchor}-{len(grouped_badges.get(issuer, []))}) | ... | {len(grouped_badges.get(issuer, []))} | ✅ |\n"
         markdown += "\n"
 
+        # Send one request to get the all organization descriptions then add them to the markdown replacing each "..."
+
+        # Save the Gemini API key in an environment variable, read it from the action secrets
+
+        # Send a request to the Gemini API to get the descriptions with a specific prompt and response format
+        # Example response format:
+        # {
+        #     "data": [
+        #         {
+        #             "description": "Description of the organization",
+        #             "organization": "Organization Name"
+        #         }
+        #     ]
+        # }
+
         # Generate the badge tables for each organization
         for issuer, badges in grouped_badges.items():
             # Add an anchor for the organization section
