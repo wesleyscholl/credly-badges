@@ -69,7 +69,7 @@ class Credly:
 
     def return_badges_html(self):
         data = self.data_from_html()
-        print(data)
+        # print(data)
         soup = BeautifulSoup(data, "lxml")
         return soup.findAll("a", {"class": "cr-public-earned-badge-grid-item"})
 
@@ -92,6 +92,9 @@ class Credly:
         markdown += "| Issuing Organization | Verified | Total Badges |\n"
         markdown += "|-----------------------|----------|--------------|\n"
         for issuer in grouped_badges.keys():
+            print("====== Issuer ====", issuer)
+            print(grouped_badges.get(issuer, []))
+            print("==========")
             # Create an anchor link for each organization
             anchor = issuer.lower().replace(" ", "-")
             # Get the total number of badges for the organization
