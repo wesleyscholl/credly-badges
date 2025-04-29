@@ -89,19 +89,19 @@ class Credly:
 
         # Generate the list of issuing organizations with anchor links
         markdown += "## List of Issuing Organizations\n\n"
-        markdown += "| Issuing Organization | Verified |\n"
-        markdown += "|-----------------------|----------|\n"
+        markdown += "| Issuing Organization | Verified | Total Badges |\n"
+        markdown += "|-----------------------|----------|--------------|\n"
         for issuer in grouped_badges.keys():
             # Create an anchor link for each organization
             anchor = issuer.lower().replace(" ", "-")
-            markdown += f"| [{issuer}](#{anchor}) | ✅ |\n"
+            markdown += f"| [{issuer}](#{anchor}) | ✅ | | {len(grouped_badges[issuer])} |\n"
         markdown += "\n"
 
         # Generate the badge tables for each organization
         for issuer, badges in grouped_badges.items():
             # Add an anchor for the organization section
             anchor = issuer.lower().replace(" ", "-")
-            markdown += f"### {issuer}\n\n"
+            markdown += f"### {issuer} ({len(badges)})\n\n"
             # Main table for the first 5 badges
             markdown += '<table width="100%">\n'
             first_row = badges[:5]  # Get the first 5 badges
@@ -122,7 +122,8 @@ class Credly:
             # If there are more than 5 badges, create a "more" dropdown
             if len(badges) > 5:
                 markdown += '<br>\n'
-                markdown += f'<details>\n  <summary>More {issuer}</summary>\n\n'
+                # Add the number of badges hidden in the dropdown title
+                markdown += f'<details>\n  <summary>More {issuer} ({len(badges) - 5})</summary>\n\n'
                 markdown += '<table width="100%">\n'
                 
                 # Process remaining badges in groups of 5
