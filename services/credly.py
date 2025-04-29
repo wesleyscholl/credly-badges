@@ -99,7 +99,7 @@ class Credly:
             print("==================")
             print(grouped_badges[issuer])
             print("==================")
-            
+
             markdown += f"| [{issuer}](#{anchor}) | ✅ | | {len(grouped_badges[issuer])} |\n"
         markdown += "\n"
 
@@ -154,7 +154,7 @@ class Credly:
                 markdown += '</table>\n\n'
                 markdown += '</details>\n\n'
 
-        print(markdown)
+        # print(markdown)
         return markdown
 
     def get_markdown(self):
