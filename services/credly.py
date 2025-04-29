@@ -31,6 +31,7 @@ class Credly:
             url = f"{self.BASE_URL}/users/{self.USER}/badges?page={page}&sort={self.sort_by()}"
             response = requests.get(url)
             data = response.text
+            print(data)
 
             soup = BeautifulSoup(data, "lxml")
             badges = soup.findAll("a", {"class": "cr-public-earned-badge-grid-item"})
@@ -89,14 +90,14 @@ class Credly:
 
         # Generate the list of issuing organizations with anchor links
         markdown += "## List of Issuing Organizations\n\n"
-        markdown += "| Issuing Organization | Verified | Credly Badges |\n"
-        markdown += "|-----------------------|----------|--------------|\n"
+        markdown += "| Issuing Organization | Description | Credly Badges | Verified |\n"
+        markdown += "|-----------------------|----------------|----------------|----------|\n"
         for issuer in grouped_badges.keys():
             # Create an anchor link for each organization
             anchor = issuer.lower().replace(" ", "-")
             # Get the total number of badges for the organization
             # Add total badges to anchored link
-            markdown += f"| [{issuer}](#{anchor}-{len(grouped_badges.get(issuer, []))}) | ✅ | {len(grouped_badges.get(issuer, []))} |\n"
+            markdown += f"| [{issuer}](#{anchor}-{len(grouped_badges.get(issuer, []))}) | ... | {len(grouped_badges.get(issuer, []))} | ✅ |\n"
         markdown += "\n"
 
         # Generate the badge tables for each organization
