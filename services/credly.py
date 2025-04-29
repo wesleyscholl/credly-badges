@@ -89,7 +89,7 @@ class Credly:
 
         # Generate the list of issuing organizations with anchor links
         markdown += "## List of Issuing Organizations\n\n"
-        markdown += "| Issuing Organization | Verified | Organization Badges |\n"
+        markdown += "| Issuing Organization | Verified | Badges |\n"
         markdown += "|-----------------------|----------|--------------|\n"
         for issuer in grouped_badges.keys():
             # Create an anchor link for each organization
