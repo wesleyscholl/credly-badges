@@ -46,7 +46,7 @@ class Credly:
                 break
 
             page += 1
-            time.sleep(1)
+            time.sleep(5)
 
         return all_data
 
