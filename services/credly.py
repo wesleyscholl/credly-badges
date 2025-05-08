@@ -36,7 +36,7 @@ class Credly:
     }
 
         while True:
-            url = f"{self.BASE_URL}/users/{self.USER}/badges?page={page}&sort={self.sort_by()}"
+            url = f"{self.BASE_URL}/users/{self.USER}"
             response = requests.get(url, headers=headers)
             data = response.text
             print(data)
