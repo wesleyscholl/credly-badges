@@ -30,7 +30,7 @@ inputs:
 
   CREDLY_API_TOKEN:
     description: "Credly API token"
-    default: ${{ secrets.API_TOKEN }}
+    default: "API-TOKEN-123"
     required: true
 
   CREDLY_BASE_URL: 
