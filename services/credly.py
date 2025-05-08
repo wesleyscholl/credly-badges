@@ -1,6 +1,10 @@
 from bs4 import BeautifulSoup
 import lxml, requests
 import time
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
 
 from settings import (
     CREDLY_SORT,
@@ -20,6 +24,20 @@ class Credly:
 
         print(self.BASE_URL, self.USER, self.SORT)
 
+        # Setup Selenium WebDriver (headless mode)
+        chrome_options = Options()
+        chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--disable-gpu")
+        chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--window-size=1920,1080")
+        chrome_options.add_argument("user-agent=Mozilla/5.0")
+
+        self.driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
+
+    def __del__(self):
+        if hasattr(self, "driver"):
+            self.driver.quit()
+
     def data_from_html(self):
         if self.FILE:
             with open(self.FILE, "r") as f:
@@ -27,22 +45,17 @@ class Credly:
         
         all_data = ""
         page = 1
-        headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
-        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-        "Accept-Language": "en-US,en;q=0.5",
-        "Connection": "keep-alive",
-        "Upgrade-Insecure-Requests": "1"
-    }
 
         while True:
             url = f"{self.BASE_URL}/users/{self.USER}"
-            response = requests.get(url, headers=headers)
-            data = response.text
+            print(f"Scraping page {page} - {url}")
+            self.driver.get(url)
+            time.sleep(3)  # Let JavaScript render content
             print(data)
 
-            soup = BeautifulSoup(data, "lxml")
-            badges = soup.findAll("div", {"class": "settings__skills-profile__edit-skills-profile__badge-card__main-card"})
+            html = self.driver.page_source
+            soup = BeautifulSoup(html, "lxml")
+            badges = soup.findAll("a", {"class": "cr-standard-grid-item-content__image"})
             if not badges:
                 break
 
@@ -80,7 +93,7 @@ class Credly:
         data = self.data_from_html()
         # print(data)
         soup = BeautifulSoup(data, "lxml")
-        return soup.findAll("div", {"class": "settings__skills-profile__edit-skills-profile__badge-card__main-card"})
+        return soup.findAll("a", {"class": "cr-standard-grid-item-content__image"})
 
     def generate_md_format(self, badges):
         if not badges:
