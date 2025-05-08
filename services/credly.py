@@ -1,8 +1,3 @@
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 from bs4 import BeautifulSoup
 import lxml, requests
 import time
@@ -29,47 +24,29 @@ class Credly:
         if self.FILE:
             with open(self.FILE, "r") as f:
                 return f.read()
-
+        
         all_data = ""
         page = 1
+        while True:
+            url = f"{self.BASE_URL}/users/{self.USER}/badges?page={page}&sort={self.sort_by()}"
+            response = requests.get(url)
+            data = response.json()
+            print(data)
 
-        # Set up Selenium WebDriver
-        service = Service("/path/to/chromedriver")  # Update with the path to your ChromeDriver
-        options = webdriver.ChromeOptions()
-        options.add_argument("--headless")  # Run in headless mode (no GUI)
-        options.add_argument("--no-sandbox")  # Required for GitHub Actions
-        options.add_argument("--disable-dev-shm-usage")  # Prevent resource issues
-        driver = webdriver.Chrome(service=service, options=options)
+            soup = BeautifulSoup(data, "lxml")
+            badges = soup.findAll("a", {"class": "cr-public-earned-badge-grid-item"})
+            if not badges:
+                break
 
-        try:
-            while True:
-                url = f"{self.BASE_URL}/users/{self.USER}/badges?page={page}&sort={self.sort_by()}"
-                driver.get(url)
+            relevant_data = ''.join(str(badge) for badge in badges)
+            all_data += relevant_data
 
-                # Wait for the page to load and JavaScript to execute
-                WebDriverWait(driver, 10).until(
-                    EC.presence_of_element_located((By.CLASS_NAME, "cr-public-earned-badge-grid-item"))
-                )
+            next_page = soup.find("a", {"rel": "next"})
+            if not next_page:
+                break
 
-                # Get the page source and parse it with BeautifulSoup
-                soup = BeautifulSoup(driver.page_source, "lxml")
-                badges = soup.findAll("a", {"class": "cr-public-earned-badge-grid-item"})
-                if not badges:
-                    break
-
-                relevant_data = ''.join(str(badge) for badge in badges)
-                all_data += relevant_data
-
-                # Check for the "next" page link
-                next_page = soup.find("a", {"rel": "next"})
-                if not next_page:
-                    break
-
-                page += 1
-                time.sleep(5)
-
-        finally:
-            driver.quit()  # Ensure the browser is closed
+            page += 1
+            time.sleep(5)
 
         return all_data
 
