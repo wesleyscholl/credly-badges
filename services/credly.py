@@ -42,7 +42,7 @@ class Credly:
             print(data)
 
             soup = BeautifulSoup(data, "lxml")
-            badges = soup.findAll("a", {"class": "cr-public-earned-badge-grid-item"})
+            badges = soup.findAll("div", {"class": "settings__skills-profile__edit-skills-profile__badge-card__main-card"})
             if not badges:
                 break
 
@@ -80,7 +80,7 @@ class Credly:
         data = self.data_from_html()
         # print(data)
         soup = BeautifulSoup(data, "lxml")
-        return soup.findAll("a", {"class": "cr-public-earned-badge-grid-item"})
+        return soup.findAll("div", {"class": "settings__skills-profile__edit-skills-profile__badge-card__main-card"})
 
     def generate_md_format(self, badges):
         if not badges:
