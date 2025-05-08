@@ -27,6 +27,16 @@ inputs:
     description: "The sort type for return credly badges [RECENT/POPULAR]"
     default: RECENT
     required: false
+
+  CREDLY_API_TOKEN:
+    description: "Credly API token"
+    default: ${{ secrets.API_TOKEN }}
+    required: true
+
+  CREDLY_BASE_URL: 
+    description: "The base URL for Credly API"
+    default: https://www.credly.com
+    required: false
   
   BADGE_SIZE:
     description: "Defines the badge dimension."
