@@ -67,6 +67,51 @@ class Credly:
         badges = self.fetch_badges()
         return [self.convert_to_dict(badge) for badge in badges]
 
+    def org_descriptions(self, issuer):
+        descriptions = {
+            "APIsec University": "APIsec University is a learning platform focused on API security, offering certifications to strengthen secure development practices.",
+            "Acronis": "Acronis is a global leader in cyber protection, specializing in data backup, recovery, and secure file access.",
+            "Adobe Education": "Adobe's educational initiative that provides creative tools and resources for students and educators.",
+            "Alteryx": "Alteryx is a data analytics company known for its user-friendly platform that enables data blending and advanced analytics.",
+            "Amazon Web Services Training and Certification": "AWS's official training body offering cloud computing certifications and skill development.",
+            "Appcues": "Appcues is a platform that helps product teams build personalized user onboarding and in-app experiences without code.",
+            "AttackIQ": "AttackIQ is a cybersecurity company that provides breach and attack simulation tools to test and improve defenses.",
+            "Basis Technologies": "Basis Technologies specializes in DevOps and automation tools for SAP systems to accelerate digital transformation.",
+            "Broadcom": "Broadcom is a global technology leader that designs, develops, and supplies semiconductor and infrastructure software solutions.",
+            "Celonis": "Celonis is a process mining software company helping businesses discover and fix inefficiencies in their operations.",
+            "Certiprof": "Certiprof is a certification provider offering globally recognized credentials in project management, IT, and business agility.",
+            "Cisco": "Cisco is a multinational technology conglomerate known for networking hardware, cybersecurity, and IT certifications.",
+            "ClickHouse": "ClickHouse is an open-source columnar database management system optimized for real-time analytical queries.",
+            "CompTIA": "CompTIA is a nonprofit trade association providing vendor-neutral IT certifications and professional development.",
+            "Data Protocol": "Data Protocol is an educational platform offering bite-sized technical training for developers in modern data tools.",
+            "Dremio": "Dremio is a data lakehouse platform that simplifies and accelerates analytics directly on cloud data lakes.",
+            "Extreme Networks": "Extreme Networks provides cloud-driven networking solutions and services for enterprise-level connectivity.",
+            "Google Cloud": "Google Cloud is Google's cloud computing division, offering infrastructure, machine learning, and development tools.",
+            "Hewlett Packard Enterprise (HPE)": "Hewlett Packard Enterprise specializes in enterprise IT solutions including servers, storage, and cloud services.",
+            "IBM": "IBM is a multinational technology company offering AI, cloud computing, and enterprise software solutions.",
+            "IBM SkillsBuild": "IBM SkillsBuild is an IBM initiative offering free digital learning and career-readiness programs for job seekers.",
+            "ISC2": "ISC2 is a nonprofit organization offering cybersecurity certifications, including the well-known CISSP.",
+            "Ikigai Labs": "Ikigai Labs provides AI/ML platforms that enable easy building and deployment of predictive analytics workflows.",
+            "Intel": "Intel is a leading semiconductor manufacturer known for CPUs, data center solutions, and AI hardware innovation.",
+            "Kong": "Kong is an open-source API management and microservices platform for modern distributed architectures.",
+            "Lucid Software": "Lucid Software offers collaborative diagramming and whiteboarding tools like Lucidchart and Lucidspark.",
+            "MongoDB": "MongoDB is the creator of the popular NoSQL database known for flexibility and scalability in modern application development.",
+            "NASA Open Science": "NASA Open Science is a program by NASA promoting open access to scientific data, tools, and research collaboration.",
+            "Okta": "Okta is a leading identity and access management platform providing secure authentication for users and applications.",
+            "Pendo": "Pendo is a product experience platform that helps software teams improve user onboarding, feedback, and retention.",
+            "Project Management Institute (PMI)": "PMI is a global organization offering standards and certifications in project management, including the PMP.",
+            "SAP": "SAP is a global enterprise software leader in ERP, data analytics, and digital transformation solutions.",
+            "SAS": "SAS specializes in advanced analytics, AI, and business intelligence software and services.",
+            "The Linux Foundation": "The Linux Foundation is a nonprofit that supports open-source innovation and provides training in Linux and emerging technologies.",
+            "ZEDEDA": "ZEDEDA offers edge computing orchestration solutions for deploying and managing applications at the network edge.",
+            "Zendesk": "Zendesk is a customer service and engagement platform that helps businesses manage support and improve customer satisfaction."
+        }
+
+        if issuer in descriptions:
+            return descriptions[issuer]
+        else:
+            return "..."
+
     def generate_md_format(self, badges):
         if not badges:
             return None
@@ -85,7 +130,7 @@ class Credly:
         markdown += "|-----------------------|----------------|----------------|----------|\n"
         for issuer in grouped_badges.keys():
             anchor = issuer.lower().replace(" ", "-")
-            markdown += f"| [{issuer}](#{anchor}-{len(grouped_badges.get(issuer, []))}) | ... | {len(grouped_badges.get(issuer, []))} | ✅ |\n"
+            markdown += f"| [{issuer}](#{anchor}-{len(grouped_badges.get(issuer, []))}) | {self.org_descriptions(issuer)} | {len(grouped_badges.get(issuer, []))} | ✅ |\n"
         markdown += "\n"
 
         for issuer, badges in grouped_badges.items():
