@@ -2,6 +2,8 @@ from bs4 import BeautifulSoup
 import lxml, requests
 import time
 
+# All badges listed on this github page are completely free, no payment required. There are thousands of free training resources available but not all have certificates, badges or proof of completion. 
+
 from settings import (
     CREDLY_SORT,
     CREDLY_USER,
@@ -134,7 +136,7 @@ class Credly:
         if not badges:
             return None
 
-        sorted_badges = sorted(badges, key=lambda x: x["issuer"])
+        sorted_badges = sorted(badges, key=lambda x: x["issuer"].lower())
         grouped_badges = {}
         for badge in sorted_badges:
             issuer = badge["issuer"]
@@ -147,7 +149,7 @@ class Credly:
         markdown += "| Issuing Organization | Description | Credly Badges | Verified |\n"
         markdown += "|-----------------------|----------------|----------------|----------|\n"
         for issuer in grouped_badges.keys():
-            anchor = issuer.lower().replace(" ", "-")
+            anchor = issuer.lower().replace(" ", "-").replace(".", "-")
             markdown += f"| [{issuer}](#{anchor}-{len(grouped_badges.get(issuer, []))}) | {self.org_descriptions(issuer)} | {len(grouped_badges.get(issuer, []))} | ✅ |\n"
         markdown += "\n"
 
@@ -157,10 +159,7 @@ class Credly:
             markdown += '<table width="100%">\n'
             markdown += '  <tr>\n'
             markdown += '    <th width="20%">Badge</th>\n'
-            markdown += '    <th width="20%">Description</th>\n'
-            markdown += '    <th width="20%">Time to Earn</th>\n'
-            markdown += '    <th width="20%">Skills</th>\n'
-            markdown += '    <th width="20%">Criteria</th>\n'
+            markdown += '    <th width="80%"></th>\n'
             markdown += '  </tr>\n'
 
             # Display the first 5 badges
@@ -168,10 +167,7 @@ class Credly:
             for badge in first_row:
                 markdown += '  <tr>\n'
                 markdown += f'    <td align="center" width="20%"><a href="{badge["href"]}"><img src="{badge["img"]}" /></a><br><a href="{badge["href"]}">{badge["title"]} - {badge["issuer"]}</a></td>\n'
-                markdown += f'    <td width="20%">{badge["description"]}</td>\n'
-                markdown += f'    <td width="20%">{badge["time_to_earn"]}</td>\n'
-                markdown += f'    <td width="20%">{"- \n".join(badge["skills"])}</td>\n'
-                markdown += f'    <td width="20%">{badge["criteria"]}</td>\n'
+                markdown += f'    <td width="80%">- Description: {badge["description"]} \n- Time to Earn: {badge["time_to_earn"]} \n- Skills: {"- \n".join(badge["skills"])} \n- Earning Criteria:{badge["criteria"]}</td>\n'
                 markdown += '  </tr>\n'
             markdown += '</table>\n\n'
 
@@ -182,20 +178,14 @@ class Credly:
                 markdown += '<table width="100%">\n'
                 markdown += '  <tr>\n'
                 markdown += '    <th width="20%">Badge</th>\n'
-                markdown += '    <th width="20%">Description</th>\n'
-                markdown += '    <th width="20%">Time to Earn</th>\n'
-                markdown += '    <th width="20%">Skills</th>\n'
-                markdown += '    <th width="20%">Criteria</th>\n'
+                markdown += '    <th width="80%"></th>\n'
                 markdown += '  </tr>\n'
 
                 remaining_badges = badges[5:]
                 for badge in remaining_badges:
                     markdown += '  <tr>\n'
                     markdown += f'    <td align="center" width="20%"><a href="{badge["href"]}"><img src="{badge["img"]}" /></a><br><a href="{badge["href"]}">{badge["title"]} - {badge["issuer"]}</a></td>\n'
-                    markdown += f'    <td width="20%">{badge["description"]}</td>\n'
-                    markdown += f'    <td width="20%">{badge["time_to_earn"]}</td>\n'
-                    markdown += f'    <td width="20%">{", ".join(badge["skills"])}</td>\n'
-                    markdown += f'    <td width="20%">{badge["criteria"]}</td>\n'
+                    markdown += f'    <td width="80%">- Description: {badge["description"]} \n- Time to Earn: {badge["time_to_earn"]} \n- Skills: {"- \n".join(badge["skills"])} \n- Earning Criteria: {badge["criteria"]}</td>\n'
                     markdown += '  </tr>\n'
                 markdown += '</table>\n\n'
                 markdown += '</details>\n\n'
