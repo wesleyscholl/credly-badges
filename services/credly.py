@@ -57,7 +57,7 @@ class Credly:
         issuer = badge["issuer"]["entities"][0]["entity"]["name"] if badge["issuer"]["entities"] else "Unknown Issuer"
 
         activities = badge_template.get("badge_template_activities", [])
-        criteria = ", ".join(activity.get("title", "No criteria provided") for activity in activities if isinstance(activity, dict))
+        criteria = "- \n".join(activity.get("title", "No criteria provided") for activity in activities if isinstance(activity, dict))
 
         return {
             "title": badge_template["name"],
@@ -143,7 +143,7 @@ class Credly:
             grouped_badges[issuer].append(badge)
 
         markdown = f"## Total Badges: ({len(badges)})\n\n"
-        markdown += "## List of Issuing Organizations\n\n"
+        markdown += f"## List of Issuing Organizations ({len(grouped_badges)})\n\n"
         markdown += "| Issuing Organization | Description | Credly Badges | Verified |\n"
         markdown += "|-----------------------|----------------|----------------|----------|\n"
         for issuer in grouped_badges.keys():
@@ -170,7 +170,7 @@ class Credly:
                 markdown += f'    <td align="center" width="20%"><a href="{badge["href"]}"><img src="{badge["img"]}" /></a><br><a href="{badge["href"]}">{badge["title"]} - {badge["issuer"]}</a></td>\n'
                 markdown += f'    <td width="20%">{badge["description"]}</td>\n'
                 markdown += f'    <td width="20%">{badge["time_to_earn"]}</td>\n'
-                markdown += f'    <td width="20%">{", ".join(badge["skills"])}</td>\n'
+                markdown += f'    <td width="20%">{"- \n".join(badge["skills"])}</td>\n'
                 markdown += f'    <td width="20%">{badge["criteria"]}</td>\n'
                 markdown += '  </tr>\n'
             markdown += '</table>\n\n'
