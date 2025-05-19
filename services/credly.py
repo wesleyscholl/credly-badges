@@ -171,7 +171,7 @@ class Credly:
                 markdown += '  <tr>\n'
                 markdown += f'    <td align="center" width="20%"><a href="{badge["href"]}"><img src="{badge["img"]}" /></a><br><a href="{badge["href"]}">{badge["title"]} - {badge["issuer"]}</a></td>\n'
                 markdown += f'    <td width="40%">{badge["description"]}</td>\n'
-                markdown += f'    <td width="5%">{badge["time_to_earn"]}</td>\n'
+                markdown += f'    <td align="center" width="5%">{badge["time_to_earn"]}</td>\n'
                 markdown += f'    <td width="10%">{"- \n".join(badge["skills"])}</td>\n'
                 markdown += f'    <td width="25%">{badge["criteria"]}</td>\n'
 
@@ -196,7 +196,7 @@ class Credly:
                     markdown += '  <tr>\n'
                     markdown += f'    <td align="center" width="20%"><a href="{badge["href"]}"><img src="{badge["img"]}" /></a><br><a href="{badge["href"]}">{badge["title"]} - {badge["issuer"]}</a></td>\n'
                     markdown += f'    <td width="40%">{badge["description"]}</td>\n'
-                    markdown += f'    <td width="5%">{badge["time_to_earn"]}</td>\n'
+                    markdown += f'    <td align="center" width="5%">{badge["time_to_earn"]}</td>\n'
                     markdown += f'    <td width="10%">{"- \n".join(badge["skills"])}</td>\n'
                     markdown += f'    <td width="25%">{badge["criteria"]}</td>\n'
                     markdown += '  </tr>\n'
