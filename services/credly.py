@@ -53,6 +53,19 @@ class Credly:
 
         return all_badges
 
+    def replace_broken_images(self, badge):
+        """Replace known broken image links with functional ones."""
+        broken_images = {
+            "https://www.credly.com/org/ibm-skillsbuild/badge/getting-started-with-data": "http://www.credly.com/badges/bcd2b361-ce6d-4bb7-9fc4-4bba25cc6a7f",
+            "https://www.credly.com/org/ibm-skillsbuild/badge/getting-started-with-cybersecurity": "http://www.credly.com/badges/ce8f9f38-c187-40f5-aa9c-db72b3c29698",
+            "https://www.credly.com/org/ibm-skillsbuild/badge/generative-ai-in-action": "http://www.credly.com/badges/857864af-eead-46d0-9805-8d825642aa6d",
+            "https://www.credly.com/org/ibm-skillsbuild/badge/getting-started-with-artificial-intelligence": "http://www.credly.com/badges/e0f49a38-3af6-4eb5-a69d-2e16931972c2",
+        }
+
+        # Check if the badge's href matches a known broken link
+        if badge["href"] in broken_images:
+            badge["img"] = broken_images[badge["href"]]
+        return badge
 
     def convert_to_dict(self, badge):
         badge_template = badge["badge_template"]
@@ -61,7 +74,7 @@ class Credly:
         activities = badge_template.get("badge_template_activities", [])
         criteria = "- \n".join(activity.get("title", "No criteria provided") for activity in activities if isinstance(activity, dict))
 
-        return {
+        badge_dict = {
             "title": badge_template["name"],
             "href": badge_template["url"],
             "img": badge_template["image_url"].replace("110x110", f"{BADGE_SIZE}x{BADGE_SIZE}"),
@@ -71,6 +84,9 @@ class Credly:
             "skills": badge_template["skills"],
             "criteria": criteria,
         }
+
+        # Replace broken image links
+        return self.replace_broken_images(badge_dict)
 
     def return_badges_html(self):
         badges = self.fetch_badges()
