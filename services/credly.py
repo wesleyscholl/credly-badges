@@ -56,6 +56,9 @@ class Credly:
         badge_template = badge["badge_template"]
         issuer = badge["issuer"]["entities"][0]["entity"]["name"] if badge["issuer"]["entities"] else "Unknown Issuer"
 
+        activities = badge_template.get("badge_template_activities", [])
+        criteria = ", ".join(activity.get("title", "No criteria provided") for activity in activities if isinstance(activity, dict))
+
         return {
             "title": badge_template["name"],
             "href": badge_template["url"],
@@ -64,7 +67,7 @@ class Credly:
             "description": badge_template["description"],
             "time_to_earn": badge_template["time_to_earn"],
             "skills": badge_template["skills"],
-            "criteria": badge_template["badge_template_activities"].get("title", "No criteria provided"),
+            "criteria": criteria,
         }
 
     def return_badges_html(self):
