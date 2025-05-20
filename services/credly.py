@@ -63,8 +63,8 @@ class Credly:
         }
 
         # Check if the badge's href matches a known broken link
-        if badge["href"] in broken_images:
-            badge["img"] = broken_images[badge["href"]]
+        if badge["img"] in broken_images:
+            badge["img"] = broken_images[badge["img"]]
         return badge
 
     def convert_to_dict(self, badge):
@@ -84,9 +84,11 @@ class Credly:
             "skills": badge_template["skills"],
             "criteria": criteria,
         }
-
-        # Replace broken image links
-        return self.replace_broken_images(badge_dict)
+        
+        if issuer == "IBM SkillsBuild":
+            return self.replace_broken_images(badge_dict)
+        else
+            return badge_dict
 
     def return_badges_html(self):
         badges = self.fetch_badges()
