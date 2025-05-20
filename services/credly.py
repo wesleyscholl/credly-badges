@@ -53,7 +53,7 @@ class Credly:
 
         return all_badges
 
-    def replace_broken_images(self, badge):
+    def replace_broken_images(self, badges):
         """Replace known broken image links with functional ones."""
         broken_images = {
             "https://www.credly.com/org/ibm-skillsbuild/badge/getting-started-with-data": "http://www.credly.com/badges/bcd2b361-ce6d-4bb7-9fc4-4bba25cc6a7f",
