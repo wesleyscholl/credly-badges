@@ -53,30 +53,25 @@ class Credly:
 
         return all_badges
 
-    def replace_broken_images(self, badges):
-        """Replace known broken image links with functional ones."""
-        broken_images = {
-            "https://www.credly.com/org/ibm-skillsbuild/badge/getting-started-with-data": "http://www.credly.com/badges/bcd2b361-ce6d-4bb7-9fc4-4bba25cc6a7f",
-            "https://www.credly.com/org/ibm-skillsbuild/badge/getting-started-with-cybersecurity": "http://www.credly.com/badges/ce8f9f38-c187-40f5-aa9c-db72b3c29698",
-            "https://www.credly.com/org/ibm-skillsbuild/badge/generative-ai-in-action": "http://www.credly.com/badges/857864af-eead-46d0-9805-8d825642aa6d",
-            "https://www.credly.com/org/ibm-skillsbuild/badge/getting-started-with-artificial-intelligence": "http://www.credly.com/badges/e0f49a38-3af6-4eb5-a69d-2e16931972c2",
-        }
-    
-        for badge in badges:
-            issuer = badge.get("issuer")
-            img = badge.get("img")
-            if issuer == "IBM SkillsBuild" and img in broken_images:
-                print(f"Match found: {img}")
-                badge["img"] = broken_images[img]
-                print(f"Image replaced with: {badge['img']}")
-        return badges
-
     def convert_to_dict(self, badge):
         badge_template = badge["badge_template"]
         issuer = badge["issuer"]["entities"][0]["entity"]["name"] if badge["issuer"]["entities"] else "Unknown Issuer"
 
         activities = badge_template.get("badge_template_activities", [])
         criteria = ", ".join(activity.get("title", "No criteria provided") for activity in activities if isinstance(activity, dict))
+
+        broken_images = {
+            "https://www.credly.com/org/ibm-skillsbuild/badge/getting-started-with-data": "http://www.credly.com/badges/bcd2b361-ce6d-4bb7-9fc4-4bba25cc6a7f",
+            "https://www.credly.com/org/ibm-skillsbuild/badge/getting-started-with-cybersecurity": "http://www.credly.com/badges/ce8f9f38-c187-40f5-aa9c-db72b3c29698",
+            "https://www.credly.com/org/ibm-skillsbuild/badge/generative-ai-in-action": "http://www.credly.com/badges/857864af-eead-46d0-9805-8d825642aa6d",
+            "https://www.credly.com/org/ibm-skillsbuild/badge/getting-started-with-artificial-intelligence": "http://www.credly.com/badges/e0f49a38-3af6-4eb5-a69d-2e16931972c2",
+        }
+
+        # Check if the issuer matches IBM SkillsBuild and if so, replace the image URL
+        if issuer == "IBM SkillsBuild" and badge_template["image_url"] in broken_images:
+            print(f"Replacing broken image URL for {badge_template['name']}")
+            badge_template["image_url"] = broken_images[badge_template["image_url"]]
+            print(f"New image URL: {badge_template['image_url']}")
 
         return {
             "title": badge_template["name"],
@@ -91,10 +86,7 @@ class Credly:
 
     def return_badges_html(self):
         badges = self.fetch_badges()
-        # Convert each badge to a dictionary
-        badge_dicts = [self.convert_to_dict(badge) for badge in badges]
-        # Replace broken images for "IBM SkillsBuild" badges after conversion
-        return self.replace_broken_images(badge_dicts)
+        return [self.convert_to_dict(badge) for badge in badges]
 
     def org_descriptions(self, issuer):
         descriptions = {
