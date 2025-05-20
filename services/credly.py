@@ -82,6 +82,7 @@ class Credly:
             "time_to_earn": badge_template["time_to_earn"],
             "skills": badge_template["skills"],
             "criteria": criteria,
+            "level": badge_template["level"],
         }
 
     def return_badges_html(self):
@@ -168,54 +169,63 @@ class Credly:
         for issuer, badges in grouped_badges.items():
             anchor = issuer.lower().replace(" ", "-")
             markdown += f"### {issuer} ({len(badges)})\n\n"
-            markdown += '<table width="100%">\n'
+            markdown += '<table width="100%" border="1" cellspacing="0" cellpadding="4">\n'
             markdown += '  <tr>\n'
             markdown += '    <th width="20%">Badge</th>\n'
-            markdown += '    <th width="35%">Description</th>\n'
-            markdown += '    <th width="15%">Time to Earn</th>\n'
-            markdown += '    <th width="15%">Skills</th>\n'
-            markdown += '    <th width="15%">Earning Criteria</th>\n'
+            markdown += '    <th width="80%">Description, Time to Earn, Skills & Earning Criteria</th>\n'
             markdown += '  </tr>\n'
 
-            # Display the first 5 badges
-            first_row = badges[:5]
-            for badge in first_row:
-                markdown += '  <tr>\n'
-                markdown += f'    <td align="center" width="20%"><a href="{badge["href"]}"><img src="{badge["img"]}" /></a><br><a href="{badge["href"]}">{badge["title"]} - {badge["issuer"]}</a></td>\n'
-                markdown += f'    <td width="35%">{badge["description"]}</td>\n'
-                markdown += f'    <td align="center" width="15%">{badge["time_to_earn"]}</td>\n'
-                markdown += f'    <td width="15%">{", ".join(badge["skills"])}</td>\n'
-                markdown += f'    <td width="15%">{badge["criteria"]}</td>\n'
-
-                markdown += '  </tr>\n'
+            # Generate rows for the first 5 badges
+            markdown += self.generate_badge_rows(badges[:5])
             markdown += '</table>\n\n'
 
             # If there are more than 5 badges, create a "more" dropdown
             if len(badges) > 5:
                 markdown += '<br>\n'
                 markdown += f'<details>\n  <summary>More {issuer} ({len(badges) - 5})</summary>\n\n'
-                markdown += '<table width="100%">\n'
+                markdown += '<table width="100%" border="1" cellspacing="0" cellpadding="4">\n'
                 markdown += '  <tr>\n'
                 markdown += '    <th width="20%">Badge</th>\n'
-                markdown += '    <th width="35%">Description</th>\n'
-                markdown += '    <th width="15%">Time to Earn</th>\n'
-                markdown += '    <th width="15%">Skills</th>\n'
-                markdown += '    <th width="15%">Earning Criteria</th>\n'
+                markdown += '    <th width="80%">Description, Time to Earn, Skills & Earning Criteria</th>\n'
                 markdown += '  </tr>\n'
 
-                remaining_badges = badges[5:]
-                for badge in remaining_badges:
-                    markdown += '  <tr>\n'
-                    markdown += f'    <td align="center" width="20%"><a href="{badge["href"]}"><img src="{badge["img"]}" /></a><br><a href="{badge["href"]}">{badge["title"]} - {badge["issuer"]}</a></td>\n'
-                    markdown += f'    <td width="35%">{badge["description"]}</td>\n'
-                    markdown += f'    <td align="center" width="15%">{badge["time_to_earn"]}</td>\n'
-                    markdown += f'    <td width="15%">{", ".join(badge["skills"])}</td>\n'
-                    markdown += f'    <td width="15%">{badge["criteria"]}</td>\n'
-                    markdown += '  </tr>\n'
+                # Generate rows for the remaining badges
+                markdown += self.generate_badge_rows(badges[5:])
                 markdown += '</table>\n\n'
                 markdown += '</details>\n\n'
 
         return markdown
+
+
+    def generate_badge_rows(self, badges):
+        """Helper function to generate table rows for a list of badges."""
+        rows = ""
+        for badge in badges:
+            rows += '  <tr>\n'
+            rows += f'    <td align="center" width="20%">\n'
+            rows += f'      <a href="{badge["href"]}">\n'
+            rows += f'        <img src="{badge["img"]}" width="100">\n'
+            rows += f'      </a><br>\n'
+            rows += f'      <a href="{badge["href"]}">{badge["title"]} - {badge["issuer"]}</a>\n'
+            rows += f'    </td>\n'
+            rows += f'    <td width="80%">\n'
+            rows += f'      <strong>Description:</strong>\n'
+            rows += f'      <details>\n'
+            rows += f'        <summary>Click to expand</summary>\n'
+            rows += f'        {badge["description"]}\n'
+            rows += f'      </details>\n'
+            rows += f'      <br>\n'
+            rows += f'      <table width="100%" border="0" cellspacing="4" cellpadding="4">\n'
+            rows += f'        <tr>\n'
+            rows += f'          <td><strong>Skills:</strong> {", ".join(badge["skills"])}</td>\n'
+            rows += f'          <td><strong>Earning Criteria:</strong> {badge["criteria"]}</td>\n'
+            rows += f'          <td><strong>Time to Earn:</strong> {badge["time_to_earn"]}</td>\n'
+            rows += f'          <td><strong>Level:</strong> {badge.get("level", "N/A")}</td>\n'
+            rows += f'        </tr>\n'
+            rows += f'      </table>\n'
+            rows += f'    </td>\n'
+            rows += f'  </tr>\n'
+        return rows
 
     def get_markdown(self):
         badges = self.return_badges_html()
