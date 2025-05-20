@@ -75,7 +75,7 @@ class Credly:
         activities = badge_template.get("badge_template_activities", [])
         criteria = ", ".join(activity.get("title", "No criteria provided") for activity in activities if isinstance(activity, dict))
 
-        return = {
+        return {
             "title": badge_template["name"],
             "href": badge_template["url"],
             "img": badge_template["image_url"].replace("110x110", f"{BADGE_SIZE}x{BADGE_SIZE}"),
