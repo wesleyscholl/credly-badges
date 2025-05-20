@@ -87,7 +87,7 @@ class Credly:
         
         if issuer == "IBM SkillsBuild":
             return self.replace_broken_images(badge_dict)
-        else
+        else:
             return badge_dict
 
     def return_badges_html(self):
