@@ -64,8 +64,8 @@ class Credly:
 
         for badge in badges:
         # Check if the badge is from "IBM SkillsBuild" and if it has a broken image
-        if "ibm-skillsbuild" in badge.get("img", "") in broken_images:
-            badge["img"] = broken_images[badge["img"]]
+            if "ibm-skillsbuild" in badge.get("img", "") in broken_images:
+                badge["img"] = broken_images[badge["img"]]
         return badges
 
     def convert_to_dict(self, badge):
