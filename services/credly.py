@@ -88,7 +88,10 @@ class Credly:
 
     def return_badges_html(self):
         badges = self.fetch_badges()
-        return [self.convert_to_dict(badge) for badge in badges]
+        # Convert each badge to a dictionary
+        badge_dicts = [self.convert_to_dict(badge) for badge in badges]
+        # Replace broken images for "IBM SkillsBuild" badges after conversion
+        return self.replace_ibm_skillsbuild_images(badge_dicts)
 
     def org_descriptions(self, issuer):
         descriptions = {
