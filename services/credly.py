@@ -61,11 +61,14 @@ class Credly:
             "https://www.credly.com/org/ibm-skillsbuild/badge/generative-ai-in-action": "http://www.credly.com/badges/857864af-eead-46d0-9805-8d825642aa6d",
             "https://www.credly.com/org/ibm-skillsbuild/badge/getting-started-with-artificial-intelligence": "http://www.credly.com/badges/e0f49a38-3af6-4eb5-a69d-2e16931972c2",
         }
-
+    
         for badge in badges:
-        # Check if the badge is from "IBM SkillsBuild" and if it has a broken image
-            if "ibm-skillsbuild" in badge.get("img", "") in broken_images:
-                badge["img"] = broken_images[badge["img"]]
+            issuer = badge.get("issuer")
+            img = badge.get("img")
+            if issuer == "IBM SkillsBuild" and img in broken_images:
+                print(f"Match found: {img}")
+                badge["img"] = broken_images[img]
+                print(f"Image replaced with: {badge['img']}")
         return badges
 
     def convert_to_dict(self, badge):
