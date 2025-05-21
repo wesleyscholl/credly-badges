@@ -300,6 +300,7 @@ class Credly:
             markdown += f"| <img src='{self.org_logos(issuer)}' height='100' /><br>[{issuer}](#{anchor}-{len(grouped_badges.get(issuer, []))}) | {self.org_descriptions(issuer)} | {len(grouped_badges.get(issuer, []))} | ✅ | [{issuer}]({self.org_links(issuer)}) |\n"
         markdown += "\n\n"
 
+        # Add back to top anchor link
         for issuer, badges in grouped_badges.items():
             anchor = issuer.lower().replace(" ", "-")
             markdown += f"### {issuer} ({len(badges)})\n\n"
