@@ -72,6 +72,7 @@ class Credly:
             print(f"Replacing broken image URL for {badge_template['name']}")
             badge_template["image_url"] = broken_images[badge_template["name"]]
             print(f"New image URL: {badge_template['image_url']}")
+            # Still doesn't work, but it is printing in the console
 
         return {
             "title": badge_template["name"],
@@ -277,6 +278,7 @@ class Credly:
             rows += '  </tr>\n'
         return rows
 
+    # Add spacing for easier reading, also check alignment for columns
     def generate_md_format(self, badges):
         if not badges:
             return None
@@ -289,14 +291,14 @@ class Credly:
                 grouped_badges[issuer] = []
             grouped_badges[issuer].append(badge)
 
-        markdown = f"## Total Badges ({len(badges)})\n\n"
-        markdown += f"## List of Issuing Organizations ({len(grouped_badges)})\n\n"
+        markdown = f"## Total Badges: ({len(badges)})\n\n"
+        markdown += f"## List of Issuing Organizations: ({len(grouped_badges)})\n\n"
         markdown += "| Issuing Organization | Description | Credly Badges | Verified | Organization Link |\n"
-        markdown += "|----------------------|-------------|     :---:     |   :---:  |-------------------|\n"
+        markdown += "|        :---:         |-------------|     :---:     |   :---:  |       :---:       |\n"
         for issuer in grouped_badges.keys():
             anchor = issuer.lower().replace(" ", "-").replace(".", "-")
             markdown += f"| <img src='{self.org_logos(issuer)}' height='100' /><br>[{issuer}](#{anchor}-{len(grouped_badges.get(issuer, []))}) | {self.org_descriptions(issuer)} | {len(grouped_badges.get(issuer, []))} | ✅ | [{issuer}]({self.org_links(issuer)}) |\n"
-        markdown += "\n"
+        markdown += "\n\n"
 
         for issuer, badges in grouped_badges.items():
             anchor = issuer.lower().replace(" ", "-")
