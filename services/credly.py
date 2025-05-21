@@ -39,6 +39,7 @@ class Credly:
                 print(response.text)
                 break
 
+            print(f"Page {page} - Status Code: {response.status_code}")
             data = response.json()
             all_badges.extend(data["data"])
 
