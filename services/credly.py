@@ -59,17 +59,17 @@ class Credly:
         criteria = ", ".join(activity.get("title", "No criteria provided") for activity in activities if isinstance(activity, dict))
 
         broken_images = {
-            "https://www.credly.com/org/ibm-skillsbuild/badge/getting-started-with-data": "http://www.credly.com/badges/bcd2b361-ce6d-4bb7-9fc4-4bba25cc6a7f",
-            "https://www.credly.com/org/ibm-skillsbuild/badge/getting-started-with-cybersecurity": "http://www.credly.com/badges/ce8f9f38-c187-40f5-aa9c-db72b3c29698",
-            "https://www.credly.com/org/ibm-skillsbuild/badge/generative-ai-in-action": "http://www.credly.com/badges/857864af-eead-46d0-9805-8d825642aa6d",
-            "https://www.credly.com/org/ibm-skillsbuild/badge/getting-started-with-artificial-intelligence": "http://www.credly.com/badges/e0f49a38-3af6-4eb5-a69d-2e16931972c2",
+            "Getting Started with Data": "http://www.credly.com/badges/bcd2b361-ce6d-4bb7-9fc4-4bba25cc6a7f",
+            "Getting Started with Cybersecurity": "http://www.credly.com/badges/ce8f9f38-c187-40f5-aa9c-db72b3c29698",
+            "Generative AI in Action": "http://www.credly.com/badges/857864af-eead-46d0-9805-8d825642aa6d",
+            "Getting Started with Artificial Intelligence": "http://www.credly.com/badges/e0f49a38-3af6-4eb5-a69d-2e16931972c2",
         }
 
-        # Check if the issuer matches IBM SkillsBuild and if so, replace the image URL
-        # Update to match the badge name 
-        if badge_template["image_url"] in broken_images:
+        # Check if the badge name matches if so, replace the image URL
+        if badge_template["name"] in broken_images:
+            # Replace the broken image URL with the new one
             print(f"Replacing broken image URL for {badge_template['name']}")
-            badge_template["image_url"] = broken_images[badge_template["image_url"]]
+            badge_template["image_url"] = broken_images[badge_template["name"]]
             print(f"New image URL: {badge_template['image_url']}")
 
         return {
