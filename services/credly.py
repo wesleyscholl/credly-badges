@@ -2,8 +2,6 @@ from bs4 import BeautifulSoup
 import lxml, requests
 import time
 
-# All badges listed on this github page are completely free, no payment required. There are thousands of free training resources available but not all have certificates, badges or proof of completion. 
-
 from settings import (
     CREDLY_SORT,
     CREDLY_USER,
@@ -91,7 +89,110 @@ class Credly:
         return [self.convert_to_dict(badge) for badge in badges]
 
     # Add org_logos 
+    def org_logos(self, issuer):
+        logos = {
+            "APIsec University": "https://images.credly.com/size/200x200/images/722366ec-1535-4d51-ac31-f5294833e3d4/blob.png",
+            "Acronis": "https://images.credly.com/size/200x200/images/d498c506-056e-4062-905a-c757724a4b23/blob.png",
+            "Alation University": "https://images.credly.com/size/400x400/images/491c6659-8c88-4158-80f2-3228bf18db12/blob",
+            "Adobe Education": "https://images.credly.com/size/200x200/images/bb708792-a2f0-4b4a-bc7d-27d4423938af/blob.png",
+            "Alteryx": "https://images.credly.com/size/200x200/images/b8079e20-ff5f-47c4-aadd-494b54ef02eb/blob.png",
+            "Amazon Web Services Training and Certification": "https://images.credly.com/size/400x400/images/14a6da77-7f93-4867-81ef-ad7c6a400ec2/blob.png",
+            "Appcues": "https://images.credly.com/size/200x200/images/98f63591-3d90-46a9-bc4f-25ca3044459e/blob.png",
+            "AttackIQ": "https://images.credly.com/size/200x200/images/26bc3c78-d2d2-4fda-9464-c28609f305eb/blob.png",
+            "Basis Technologies": "https://images.credly.com/size/200x200/images/93556319-5a06-4a08-a363-6390d8d8cf3e/blob.png",
+            "Broadcom": "https://images.credly.com/size/200x200/images/e0b1d3bf-8d7f-4bc8-b0ff-4b6515b72561/blob.png",
+            "Camunda": "https://images.credly.com/size/200x200/images/deb111b4-fd83-428d-b0b8-b8a450b21e03/blob.png",
+            "Celonis": "https://images.credly.com/size/200x200/images/f38665cc-b74f-4149-b784-c7302afc6461/blob.png",
+            "Certiprof": "https://images.credly.com/size/200x200/images/1598437d-f59f-4f0f-a138-7e00c69acbce/blob",
+            "Chainguard": "https://images.credly.com/size/200x200/images/467f64a1-5da5-4e25-8b11-35a93fc11ec6/blob",
+            "Cisco": "https://images.credly.com/size/200x200/images/81324abf-aff1-44e3-b36b-130a7b8361a0/blob.png",
+            "ClickHouse": "https://images.credly.com/size/200x200/images/2471a383-fb15-4cb8-84f0-1b14f3a926be/blob.png",
+            "CompTIA": "https://images.credly.com/size/200x200/images/1d9d2038-abf7-49b4-a8db-c6fb884dfdb5/blob.png",
+            "Datadog": "https://images.credly.com/size/200x200/images/cd7dca42-ab31-41a9-9d2d-d90f37dced30/blob.png",
+            "Data Protocol": "https://images.credly.com/size/200x200/images/96cd563f-98e3-4f18-9ab8-240bc7aead90/blob.png",
+            "data.world": "https://images.credly.com/size/400x400/images/a878e5a2-7045-4d4f-a6fe-48c61eeede6e/blob",
+            "Dremio": "https://images.credly.com/size/200x200/images/3627d9c5-d7db-4d16-8a70-18a0587a4775/organization-600x600.png",
+            "Extreme Networks": "https://images.credly.com/size/200x200/images/f4a679e4-a683-4475-8f1e-3e36d05d2a38/blob.png",
+            "Google Cloud": "https://images.credly.com/size/200x200/images/ca55a8cf-9e9c-47e3-9378-d225d63dd1e5/blob.png",
+            "Hewlett Packard Enterprise": "https://images.credly.com/size/200x200/images/e18e9c8e-9303-4c7d-9fd6-cbb222bc64c2/HPE_logo.png",
+            "IBM": "https://images.credly.com/size/200x200/images/854d76bf-4f74-4d51-98a0-d969214bfba7/IBM%2BLogo%2Bfor%2BAcclaim%2BProfile.png",
+            "IBM SkillsBuild": "https://images.credly.com/size/200x200/images/adc55fbb-55a1-425c-b133-6ed5b83f5d38/blob.png",
+            "ISC2": "https://images.credly.com/size/200x200/images/0e8d9cd4-ce53-4afd-be2e-d8b30021b61b/blob.png",
+            "Ikigai Labs": "https://images.credly.com/size/200x200/images/65eec552-fee8-4948-bb86-5849368d57eb/blob.png",
+            "Intel": "https://images.credly.com/size/200x200/images/51b8845c-9404-4d49-be09-8decec250beb/blob.png",
+            "Kong": "https://images.credly.com/size/200x200/images/85dcf844-10cc-4587-8534-cc68b6595f8e/blob.png",
+            "Lucid Software": "https://images.credly.com/size/400x400/images/a0c7f3d8-9517-4b95-8a95-6ba75a03f360/blob.png",
+            "Make": "https://images.credly.com/size/200x200/images/7b59869c-3ce2-4c2a-85a5-e160dc33081b/blob.png",
+            "MongoDB": "https://images.credly.com/size/200x200/images/ef0ef46d-47a5-4025-a1bc-9d46732310da/blob.png",
+            "NetApp": "https://images.credly.com/size/200x200/images/92e705f4-b027-4d05-94fa-6d55048f2d92/NetApp_Logo.png",
+            "NASA Open Science": "https://images.credly.com/size/200x200/images/d2cf3383-8989-4acd-8cb8-4ca9024643fc/blob.png",
+            "Okta": "https://images.credly.com/size/200x200/images/b83732ea-b75e-4335-8fd7-7749615387d2/blob",
+            "OPSWAT": "https://images.credly.com/size/200x200/images/a5a39dfa-c315-422c-90d2-4b954b66ed28/blob.png",
+            "Pendo": "https://images.credly.com/size/200x200/images/648b5cb8-8fc1-44df-9a2e-6a4f3e86f49e/blob.png",
+            "ProcessMaker": "https://images.credly.com/size/200x200/images/7b79da44-2fa1-4bbf-b638-11f7e3284908/blob",
+            "Project Management Institute": "https://images.credly.com/size/200x200/images/31da017a-a50c-48a8-8012-c4811063581f/blob.png",
+            "SAP": "https://images.credly.com/size/200x200/images/cc566727-d258-4291-8bb5-cfffb53ebb9a/SAP_org.png",
+            "SAS": "https://images.credly.com/size/200x200/images/b108f83f-fedf-4479-8515-48a48a9df862/blob.png",
+            "Software AG": "https://images.credly.com/size/200x200/images/cb804039-a63a-4e8e-82c8-058b6fcff38a/blob.png",
+            "The Linux Foundation": "https://images.credly.com/size/200x200/images/e6066b96-c59d-49b6-87cc-d8873022e84f/blob.png",
+            "Tigera": "https://images.credly.com/size/200x200/images/44031b8f-9364-42fb-9ba7-37858c650511/blob.png",
+            "ZEDEDA": "https://images.credly.com/size/200x200/images/32b1c161-6993-4b70-a104-ef9301b3b456/blob.png",
+            "Zendesk": "https://images.credly.com/size/200x200/images/a648362b-1174-4b27-93f1-a3e12fe6d49a/blob.png"
+        }
+        return logos.get(issuer, None)
+
     # Add org_links
+    def org_links(self, issuer):
+        org_urls = {
+            "APIsec University": "https://www.credly.com/organizations/apisec-university/badges",
+            "Acronis": "https://www.credly.com/organizations/acronis/badges",
+            "Alation University": "https://www.credly.com/organizations/alation/badges",
+            "Adobe Education": "https://www.credly.com/organizations/adobe-education/badges",
+            "Alteryx": "https://www.credly.com/organizations/alteryx/badges",
+            "Amazon Web Services Training and Certification": "https://www.credly.com/organizations/amazon-web-services/badges",
+            "Appcues": "https://www.credly.com/organizations/appcues/badges",
+            "AttackIQ": "https://www.credly.com/organizations/attackiq/badges",
+            "Basis Technologies": "https://www.credly.com/organizations/basis-technologies/badges",
+            "Broadcom": "https://www.credly.com/organizations/broadcom/badges",
+            "Camunda": "https://www.credly.com/organizations/camunda/badges",
+            "Celonis": "https://www.credly.com/organizations/celonis/badges",
+            "Certiprof": "https://www.credly.com/organizations/certiprof/badges",
+            "Chainguard": "https://www.credly.com/organizations/chainguard/badges",
+            "Cisco": "https://www.credly.com/organizations/cisco/badges",
+            "ClickHouse": "https://www.credly.com/organizations/clickhouse/badges",
+            "CompTIA": "https://www.credly.com/organizations/comptia/badges",
+            "Datadog": "https://www.credly.com/organizations/datadog/badges",
+            "Data Protocol": "https://www.credly.com/organizations/data-protocol/badges",
+            "data.world": "https://www.credly.com/organizations/data-world/badges",
+            "Dremio": "https://www.credly.com/organizations/dremio/badges",
+            "Extreme Networks": "https://www.credly.com/organizations/extreme-networks/badges",
+            "Google Cloud": "https://www.credly.com/organizations/google-cloud/badges",
+            "Hewlett Packard Enterprise": "https://www.credly.com/organizations/hewlett-packard-enterprise/badges",
+            "IBM": "https://www.credly.com/organizations/ibm/badges",
+            "IBM SkillsBuild": "https://www.credly.com/organizations/ibm-skillsbuild/badges",
+            "ISC2": "https://www.credly.com/organizations/isc2/badges",
+            "Ikigai Labs": "https://www.credly.com/organizations/ikigai-labs/badges",
+            "Intel": "https://www.credly.com/organizations/intel/badges",
+            "Kong": "https://www.credly.com/organizations/kong/badges",
+            "Lucid Software": "https://www.credly.com/organizations/lucidsoftware/badges",
+            "Make": "https://www.credly.com/organizations/make/badges",
+            "MongoDB": "https://www.credly.com/organizations/mongodb/badges",
+            "NetApp": "https://www.credly.com/organizations/netapp/badges",
+            "NASA Open Science": "https://www.credly.com/organizations/nasa-open-science/badges",
+            "Okta": "https://www.credly.com/organizations/okta/badges",
+            "OPSWAT": "https://www.credly.com/organizations/opswat/badges",
+            "Pendo": "https://www.credly.com/organizations/pendo/badges",
+            "ProcessMaker": "https://www.credly.com/organizations/processmaker/badges",
+            "Project Management Institute": "https://www.credly.com/organizations/project-management-institute/badges",
+            "SAP": "https://www.credly.com/organizations/sap/badges",
+            "SAS": "https://www.credly.com/organizations/sas/badges",
+            "Software AG": "https://www.credly.com/organizations/software-ag/badges",
+            "The Linux Foundation": "https://www.credly.com/organizations/the-linux-foundation/badges",
+            "Tigera": "https://www.credly.com/organizations/tigera/badges",
+            "ZEDEDA": "https://www.credly.com/organizations/zededa/badges",
+            "Zendesk": "https://www.credly.com/organizations/zendesk/badges"
+        }
+        return org_urls.get(issuer, None)
     
     def org_descriptions(self, issuer):
         descriptions = {
@@ -149,6 +250,32 @@ class Credly:
         else:
             return "..."
 
+    def generate_badge_rows(self, badges):
+        """Helper function to generate table rows for a list of badges."""
+        rows = ""
+        for badge in badges:
+            rows += '  <tr>\n'
+            rows += f'    <td align="center" width="20%">\n'
+            rows += f'      <a href="{badge["href"]}">\n'
+            rows += f'        <img src="{badge["img"]}" width="100">\n'
+            rows += f'      </a><br>\n'
+            rows += f'      <a href="{badge["href"]}">{badge["title"]} - {badge["issuer"]}</a>\n'
+            rows += f'    </td>\n'
+            rows += f'    <td width="80%">\n'
+            rows += f'      <strong>Description:</strong>\n'
+            rows += f'      <details>\n'
+            rows += f'        <summary>Click to expand</summary>\n'
+            rows += f'        {badge["description"]}\n'
+            rows += f'      </details>\n'
+            rows += f'      <br>\n'
+            rows += f'      <strong>Skills:</strong> {", ".join(badge["skills"])}<br>\n'
+            rows += f'      <strong>Earning Criteria:</strong> {badge["criteria"]}<br>\n'
+            rows += f'      <strong>Time to Earn:</strong> {badge["time_to_earn"]}<br>\n'
+            rows += f'      <strong>Level:</strong> {badge.get("level", "N/A")}\n'
+            rows += f'    </td>\n'
+            rows += '  </tr>\n'
+        return rows
+
     def generate_md_format(self, badges):
         if not badges:
             return None
@@ -161,13 +288,13 @@ class Credly:
                 grouped_badges[issuer] = []
             grouped_badges[issuer].append(badge)
 
-        markdown = f"## Total Badges: ({len(badges)})\n\n"
+        markdown = f"## Total Badges ({len(badges)})\n\n"
         markdown += f"## List of Issuing Organizations ({len(grouped_badges)})\n\n"
-        markdown += "| Issuing Organization | Description | Credly Badges | Verified |\n"
-        markdown += "|-----------------------|----------------|----------------|----------|\n"
+        markdown += "| Issuing Organization | Description | Credly Badges | Verified | Organization Link |\n"
+        markdown += "|----------------------|-------------|     :---:     |   :---:  |-------------------|\n"
         for issuer in grouped_badges.keys():
             anchor = issuer.lower().replace(" ", "-").replace(".", "-")
-            markdown += f"| [{issuer}](#{anchor}-{len(grouped_badges.get(issuer, []))}) | {self.org_descriptions(issuer)} | {len(grouped_badges.get(issuer, []))} | ✅ |\n"
+            markdown += f"| <img src='{self.org_logos(issuer)}' height='100' /><br>[{issuer}](#{anchor}-{len(grouped_badges.get(issuer, []))}) | {self.org_descriptions(issuer)} | {len(grouped_badges.get(issuer, []))} | ✅ | [{issuer}]({self.org_links(issuer)}) |\n"
         markdown += "\n"
 
         for issuer, badges in grouped_badges.items():
@@ -199,37 +326,6 @@ class Credly:
                 markdown += '</details>\n\n'
 
         return markdown
-
-
-    def generate_badge_rows(self, badges):
-        """Helper function to generate table rows for a list of badges."""
-        rows = ""
-        for badge in badges:
-            rows += '  <tr>\n'
-            rows += f'    <td align="center" width="20%">\n'
-            rows += f'      <a href="{badge["href"]}">\n'
-            rows += f'        <img src="{badge["img"]}" width="100">\n'
-            rows += f'      </a><br>\n'
-            rows += f'      <a href="{badge["href"]}">{badge["title"]} - {badge["issuer"]}</a>\n'
-            rows += f'    </td>\n'
-            rows += f'    <td width="80%">\n'
-            rows += f'      <strong>Description:</strong>\n'
-            rows += f'      <details>\n'
-            rows += f'        <summary>Click to expand</summary>\n'
-            rows += f'        {badge["description"]}\n'
-            rows += f'      </details>\n'
-            rows += f'      <br>\n'
-            rows += f'      <table width="100%" border="0" cellspacing="4" cellpadding="4">\n'
-            rows += f'        <tr>\n'
-            rows += f'          <td><strong>Skills:</strong> {", ".join(badge["skills"])}</td>\n'
-            rows += f'          <td><strong>Earning Criteria:</strong> {badge["criteria"]}</td>\n'
-            rows += f'          <td><strong>Time to Earn:</strong> {badge["time_to_earn"]}</td>\n'
-            rows += f'          <td><strong>Level:</strong> {badge.get("level", "N/A")}</td>\n'
-            rows += f'        </tr>\n'
-            rows += f'      </table>\n'
-            rows += f'    </td>\n'
-            rows += f'  </tr>\n'
-        return rows
 
     def get_markdown(self):
         badges = self.return_badges_html()
