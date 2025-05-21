@@ -91,6 +91,7 @@ class Credly:
         return [self.convert_to_dict(badge) for badge in badges]
 
     # Add org_logos 
+    # Add org_links
     
     def org_descriptions(self, issuer):
         descriptions = {
