@@ -68,7 +68,8 @@ class Credly:
         }
 
         # Check if the issuer matches IBM SkillsBuild and if so, replace the image URL
-        if issuer == "IBM SkillsBuild" and badge_template["image_url"] in broken_images:
+        # Update to match the badge name 
+        if badge_template["image_url"] in broken_images:
             print(f"Replacing broken image URL for {badge_template['name']}")
             badge_template["image_url"] = broken_images[badge_template["image_url"]]
             print(f"New image URL: {badge_template['image_url']}")
@@ -89,6 +90,8 @@ class Credly:
         badges = self.fetch_badges()
         return [self.convert_to_dict(badge) for badge in badges]
 
+    # Add org_logos 
+    
     def org_descriptions(self, issuer):
         descriptions = {
             "APIsec University": "APIsec University is a learning platform focused on API security, offering certifications to strengthen secure development practices.",
