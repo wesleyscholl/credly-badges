@@ -315,7 +315,7 @@ class Credly:
 
             # If there are more than 5 badges, create a "more" dropdown
             if len(badges) > 5:
-                markdown += f'<details>\n<summary>More {issuer} ({len(badges) - 5})</summary>\n\n'
+                markdown += f'<details><summary>More {issuer} ({len(badges) - 5})</summary>\n'
                 markdown += '<table width="100%" border="1" cellspacing="0" cellpadding="4">\n'
                 markdown += '  <tr>\n'
                 markdown += '    <th width="20%">Badge</th>\n'
