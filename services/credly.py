@@ -65,7 +65,7 @@ class Credly:
         return {
             "title": badge_template["name"],
             "href": badge_template["url"],
-            "img": badge["image"][image_url] if image_url else badge_template["image"],
+            "img": badge["image"]["image_url"] if badge["image"] else badge_template["image_url"],
             "issuer": issuer,
             "description": badge_template["description"],
             "time_to_earn": badge_template["time_to_earn"],
@@ -315,7 +315,7 @@ class Credly:
             if len(badges) > 5:
                 markdown += '<br>\n'
                 markdown += f'<details>\n  <summary>More {issuer} ({len(badges) - 5}</summary>\n'
-                markdown += f'<a href="#user-content-free-credly-badges">Back to Top ⬆️</a>\n\n'
+                markdown += f'<strong><a href="#user-content-free-credly-badges">Back to Top ⬆️</a></strong>\n\n'
                 markdown += '<table width="100%" border="1" cellspacing="0" cellpadding="4">\n'
                 markdown += '  <tr>\n'
                 markdown += '    <th width="20%">Badge</th>\n'
