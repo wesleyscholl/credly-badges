@@ -299,9 +299,9 @@ class Credly:
         for issuer, badges in grouped_badges.items():
             anchor = issuer.lower().replace(" ", "-")
             markdown += f'\n\n'
-            markdown += f"### {issuer} ({len(badges)})\n"
-            markdown += f'\n\n'
             markdown += f'<strong><a href="#user-content-free-credly-badges">Back to Top ⬆️</a></strong>\n\n'
+            markdown += f'\n\n'
+            markdown += f"### {issuer} ({len(badges)})\n"
             markdown += f'\n\n'
             markdown += '<table width="100%" border="1" cellspacing="0" cellpadding="4">\n'
             markdown += '  <tr>\n'
@@ -333,17 +333,17 @@ class Credly:
 
     def get_markdown(self):
         badges = self.return_badges_html()
-        broken_images = {
-            "Getting Started with Data": "http://www.credly.com/badges/bcd2b361-ce6d-4bb7-9fc4-4bba25cc6a7f",
-            "Getting Started with Cybersecurity": "http://www.credly.com/badges/ce8f9f38-c187-40f5-aa9c-db72b3c29698",
-            "Generative AI in Action": "http://www.credly.com/badges/857864af-eead-46d0-9805-8d825642aa6d",
-            "Getting Started with Artificial Intelligence": "http://www.credly.com/badges/e0f49a38-3af6-4eb5-a69d-2e16931972c2",
-        }
+        # broken_images = {
+        #     "Getting Started with Data": "http://www.credly.com/badges/bcd2b361-ce6d-4bb7-9fc4-4bba25cc6a7f",
+        #     "Getting Started with Cybersecurity": "http://www.credly.com/badges/ce8f9f38-c187-40f5-aa9c-db72b3c29698",
+        #     "Generative AI in Action": "http://www.credly.com/badges/857864af-eead-46d0-9805-8d825642aa6d",
+        #     "Getting Started with Artificial Intelligence": "http://www.credly.com/badges/e0f49a38-3af6-4eb5-a69d-2e16931972c2",
+        # }
 
-        # Find and replace broken image URLs
-        for badge in badges:
-            if badge["title"] in broken_images:
-                badge["img"] = broken_images[badge["title"]]
-                print(f"Replacing broken image URL for {badge['title']}")
-                print(f"New image URL: {badge['img']}")
+        # # Find and replace broken image URLs
+        # for badge in badges:
+        #     if badge["title"] in broken_images:
+        #         badge["img"] = broken_images[badge["title"]]
+        #         print(f"Replacing broken image URL for {badge['title']}")
+        #         print(f"New image URL: {badge['img']}")
         return self.generate_md_format(badges)
