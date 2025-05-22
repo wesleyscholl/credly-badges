@@ -261,21 +261,21 @@ class Credly:
             rows += f'    </td>\n'
             rows += f'    <td width="80%" padding="5">\n'
             description, remaining_description = self.twenty_word_limit(badge["description"])
-            rows += f'      <strong>Description:</strong> {description}{if remaining_description "..." else ""}<br>\n'
+            rows += f'      <strong>Description:</strong> {description}{"..." if remaining_description else ""}<br>\n'
             if remaining_description:
                 rows += f'      <details>\n'
                 rows += f'        <summary>Show more</summary>\n'
                 rows += f'        {remaining_description}\n'
                 rows += f'      </details>\n'
             skills, remaining_skills = self.twenty_word_limit(", ".join(badge["skills"]))
-            rows += f'      <strong padding="2">Skills:</strong> {skills}{if remaining_skills "..." else ""}<br>\n'
+            rows += f"      <strong padding='2'>Skills:</strong> {skills}{"..." if remaining_skills else ""}<br>\n"
             if remaining_skills:
                 rows += f'      <details>\n'
                 rows += f'        <summary>Show more</summary>\n'
                 rows += f'        {remaining_skills}\n'
                 rows += f'      </details>\n'
             criteria, remaining_criteria = self.twenty_word_limit(badge["criteria"])
-            rows += f'      <strong padding="2">Earning Criteria:</strong> {criteria}{if remaining_criteria "..." else ""}<br>\n'
+            rows += f'      <strong padding="2">Earning Criteria:</strong> {criteria}{"..." if remaining_criteria else ""}<br>\n'
             if remaining_criteria:
                 rows += f'      <details>\n'
                 rows += f'        <summary>Show more</summary>\n'
