@@ -65,7 +65,7 @@ class Credly:
         return {
             "title": badge_template["name"],
             "href": badge_template["url"],
-            "img": badge_template["image_url"].replace("110x110", f"{BADGE_SIZE}x{BADGE_SIZE}"),
+            "img": badge["image"][image_url] if image_url else badge_template["image"],
             "issuer": issuer,
             "description": badge_template["description"],
             "time_to_earn": badge_template["time_to_earn"],
@@ -296,11 +296,10 @@ class Credly:
             markdown += f"| <img src='{self.org_logos(issuer)}' height='100' /><br>[{issuer}](#{anchor}-{len(grouped_badges.get(issuer, []))}) | {self.org_descriptions(issuer)} | {len(grouped_badges.get(issuer, []))} | ✅ | [{issuer}]({self.org_links(issuer)}) |\n"
         markdown += "\n\n"
 
-        # Add back to top anchor link
         for issuer, badges in grouped_badges.items():
             anchor = issuer.lower().replace(" ", "-")
             markdown += '<br>\n'
-            markdown += f"### {issuer} ({len(badges)})\n\n"
+            markdown += f"### {issuer} ({len(badges)})<br>\n"
             markdown += f'<a href="#user-content-free-credly-badges">Back to Top ⬆️</a>\n\n'
             markdown += '<table width="100%" border="1" cellspacing="0" cellpadding="4">\n'
             markdown += '  <tr>\n'
