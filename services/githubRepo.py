@@ -26,6 +26,7 @@ class GithubRepo:
             sys.exit(1)
 
     def save_readme(self, new_readme):
+        print(f"Generated Markdown size: {len(new_readme.encode('utf-8'))} bytes")
         self.repo.update_file(
             path=self.contents_repo.path, message=self.COMMIT_MESSAGE, content=new_readme, sha=self.contents_repo.sha
         )
