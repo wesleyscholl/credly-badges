@@ -325,7 +325,7 @@ class Credly:
                 # Generate rows for the remaining badges
                 markdown += self.generate_badge_rows(badges[5:])
                 markdown += '</table>\n\n'
-                markdown += '</details>\n\n'
+                markdown += '</details>'
         
         # Print tail of the markdown
         print(markdown.split("\n")[-100:])
