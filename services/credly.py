@@ -65,7 +65,7 @@ class Credly:
         return {
             "title": badge_template["name"],
             "href": badge_template["url"],
-            "img": badge["image_url"] if badge["image_url"] else badge_template["image_url"],
+            "img": badge_template["image_url"].replace("https://images.credly.com/", f"https://images.credly.com/size/{BADGE_SIZE}x{BADGE_SIZE}/"),
             "issuer": issuer,
             "description": badge_template["description"],
             "time_to_earn": badge_template["time_to_earn"],
@@ -298,10 +298,11 @@ class Credly:
 
         for issuer, badges in grouped_badges.items():
             anchor = issuer.lower().replace(" ", "-")
-            markdown += '<br>\n'
+            markdown += f'\n\n'
             markdown += f"### {issuer} ({len(badges)})\n"
-            markdown += f'<br><br>\n\n'
+            markdown += f'\n\n'
             markdown += f'<strong><a href="#user-content-free-credly-badges">Back to Top ⬆️</a></strong>\n\n'
+            markdown += f'\n\n'
             markdown += '<table width="100%" border="1" cellspacing="0" cellpadding="4">\n'
             markdown += '  <tr>\n'
             markdown += '    <th width="20%">Badge</th>\n'
@@ -314,10 +315,7 @@ class Credly:
 
             # If there are more than 5 badges, create a "more" dropdown
             if len(badges) > 5:
-                markdown += '<br>\n'
-                markdown += f'<details>\n  <summary>More {issuer} ({len(badges) - 5}</summary>\n\n'
-                markdown += f'<br><br>\n\n'
-                markdown += f'<strong><a href="#user-content-free-credly-badges">Back to Top ⬆️</a></strong>\n\n'
+                markdown += f'<details>\n<summary>More {issuer} ({len(badges) - 5})</summary>\n\n'
                 markdown += '<table width="100%" border="1" cellspacing="0" cellpadding="4">\n'
                 markdown += '  <tr>\n'
                 markdown += '    <th width="20%">Badge</th>\n'
