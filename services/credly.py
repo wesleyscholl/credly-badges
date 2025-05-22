@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 import lxml, requests
 import time
+import random
 
 from settings import (
     CREDLY_SORT,
@@ -48,7 +49,9 @@ class Credly:
                 break
 
             page += 1
-            time.sleep(3)  # Avoid hitting rate limits
+            delay = random.uniform(2, 6)
+            print(f"Delaying next request by {delay:.2f} seconds...")
+            time.sleep(delay)  # Avoid hitting rate limits
 
         return all_badges
 
@@ -58,21 +61,6 @@ class Credly:
 
         activities = badge_template.get("badge_template_activities", [])
         criteria = ", ".join(activity.get("title", "No criteria provided") for activity in activities if isinstance(activity, dict))
-
-        broken_images = {
-            "Getting Started with Data": "http://www.credly.com/badges/bcd2b361-ce6d-4bb7-9fc4-4bba25cc6a7f",
-            "Getting Started with Cybersecurity": "http://www.credly.com/badges/ce8f9f38-c187-40f5-aa9c-db72b3c29698",
-            "Generative AI in Action": "http://www.credly.com/badges/857864af-eead-46d0-9805-8d825642aa6d",
-            "Getting Started with Artificial Intelligence": "http://www.credly.com/badges/e0f49a38-3af6-4eb5-a69d-2e16931972c2",
-        }
-
-        # Check if the badge name matches if so, replace the image URL
-        if badge_template["name"] in broken_images:
-            # Replace the broken image URL with the new one
-            print(f"Replacing broken image URL for {badge_template['name']}")
-            badge_template["image_url"] = broken_images[badge_template["name"]]
-            print(f"New image URL: {badge_template['image_url']}")
-            # Still doesn't work, but it is printing in the console
 
         return {
             "title": badge_template["name"],
@@ -90,7 +78,6 @@ class Credly:
         badges = self.fetch_badges()
         return [self.convert_to_dict(badge) for badge in badges]
 
-    # Add org_logos 
     def org_logos(self, issuer):
         logos = {
             "APIsec University": "https://images.credly.com/size/200x200/images/722366ec-1535-4d51-ac31-f5294833e3d4/blob.png",
@@ -143,7 +130,6 @@ class Credly:
         }
         return logos.get(issuer, None)
 
-    # Add org_links
     def org_links(self, issuer):
         org_urls = {
             "APIsec University": "https://www.credly.com/organizations/apisec-university/badges",
@@ -252,33 +238,55 @@ class Credly:
         else:
             return "..."
 
+    def twenty_word_limit(self, text):
+        """Helper function to limit text to 20 words. Returns the text if it is less than or equal to 20 words, otherwise returns the first 20 words followed by '...' and the remaining words as a separate string variable."""
+        words = text.split()
+        if len(words) <= 20:
+            return text
+        else:
+            limited_text = " ".join(words[:20]) + "..."
+            remaining_text = " ".join(words[20:])
+            return limited_text, remaining_text
+
     def generate_badge_rows(self, badges):
         """Helper function to generate table rows for a list of badges."""
         rows = ""
         for badge in badges:
             rows += '  <tr>\n'
-            rows += f'    <td align="center" width="20%">\n'
+            rows += f'    <td align="center" width="20%" padding="5">\n'
             rows += f'      <a href="{badge["href"]}">\n'
             rows += f'        <img src="{badge["img"]}" width="100">\n'
             rows += f'      </a><br>\n'
             rows += f'      <a href="{badge["href"]}">{badge["title"]} - {badge["issuer"]}</a>\n'
             rows += f'    </td>\n'
-            rows += f'    <td width="80%">\n'
-            rows += f'      <strong>Description:</strong>\n'
-            rows += f'      <details>\n'
-            rows += f'        <summary>Click to expand</summary>\n'
-            rows += f'        {badge["description"]}\n'
-            rows += f'      </details>\n'
-            rows += f'      <br>\n'
-            rows += f'      <strong>Skills:</strong> {", ".join(badge["skills"])}<br>\n'
-            rows += f'      <strong>Earning Criteria:</strong> {badge["criteria"]}<br>\n'
-            rows += f'      <strong>Time to Earn:</strong> {badge["time_to_earn"]}<br>\n'
-            rows += f'      <strong>Level:</strong> {badge.get("level", "N/A")}\n'
+            rows += f'    <td width="80%" padding="5">\n'
+            description, remaining_description = self.twenty_word_limit(badge["description"])
+            rows += f'      <strong>Description:</strong> {description}{if remaining_description "..." else ""}<br>\n'
+            if remaining_description:
+                rows += f'      <details>\n'
+                rows += f'        <summary>Show more</summary>\n'
+                rows += f'        {remaining_description}\n'
+                rows += f'      </details>\n'
+            skills, remaining_skills = self.twenty_word_limit(", ".join(badge["skills"]))
+            rows += f'      <strong padding="2">Skills:</strong> {skills}{if remaining_skills "..." else ""}<br>\n'
+            if remaining_skills:
+                rows += f'      <details>\n'
+                rows += f'        <summary>Show more</summary>\n'
+                rows += f'        {remaining_skills}\n'
+                rows += f'      </details>\n'
+            criteria, remaining_criteria = self.twenty_word_limit(badge["criteria"])
+            rows += f'      <strong padding="2">Earning Criteria:</strong> {criteria}{if remaining_criteria "..." else ""}<br>\n'
+            if remaining_criteria:
+                rows += f'      <details>\n'
+                rows += f'        <summary>Show more</summary>\n'
+                rows += f'        {remaining_criteria}\n'
+                rows += f'      </details>\n'
+            rows += f'      <strong padding="2">Time to Earn:</strong> {badge["time_to_earn"]}<br>\n'
+            rows += f'      <strong padding="2">Level:</strong> {badge.get("level", "N/A")}\n'
             rows += f'    </td>\n'
             rows += '  </tr>\n'
         return rows
 
-    # Add spacing for easier reading, also check alignment for columns
     def generate_md_format(self, badges):
         if not badges:
             return None
@@ -303,7 +311,8 @@ class Credly:
         # Add back to top anchor link
         for issuer, badges in grouped_badges.items():
             anchor = issuer.lower().replace(" ", "-")
-            markdown += f"### {issuer} ({len(badges)})\n\n"
+            markdown += '<br>\n'
+            markdown += f"### {issuer} ({len(badges)}) - [Back to Top ⬆️](#user-content-free-credly-badges)\n\n"
             markdown += '<table width="100%" border="1" cellspacing="0" cellpadding="4">\n'
             markdown += '  <tr>\n'
             markdown += '    <th width="20%">Badge</th>\n'
@@ -317,7 +326,7 @@ class Credly:
             # If there are more than 5 badges, create a "more" dropdown
             if len(badges) > 5:
                 markdown += '<br>\n'
-                markdown += f'<details>\n  <summary>More {issuer} ({len(badges) - 5})</summary>\n\n'
+                markdown += f'<details>\n  <summary>More {issuer} ({len(badges) - 5}  - [Back to Top ⬆️](#user-content-free-credly-badges)\n\n")</summary>\n\n'
                 markdown += '<table width="100%" border="1" cellspacing="0" cellpadding="4">\n'
                 markdown += '  <tr>\n'
                 markdown += '    <th width="20%">Badge</th>\n'
@@ -329,9 +338,23 @@ class Credly:
                 markdown += '</table>\n\n'
                 markdown += '</details>\n\n'
         
-        print(markdown)
+        # Print tail of the markdown
+        print(markdown.split("\n")[-100:])
         return markdown
 
     def get_markdown(self):
         badges = self.return_badges_html()
+        broken_images = {
+            "Getting Started with Data": "http://www.credly.com/badges/bcd2b361-ce6d-4bb7-9fc4-4bba25cc6a7f",
+            "Getting Started with Cybersecurity": "http://www.credly.com/badges/ce8f9f38-c187-40f5-aa9c-db72b3c29698",
+            "Generative AI in Action": "http://www.credly.com/badges/857864af-eead-46d0-9805-8d825642aa6d",
+            "Getting Started with Artificial Intelligence": "http://www.credly.com/badges/e0f49a38-3af6-4eb5-a69d-2e16931972c2",
+        }
+
+        # Find and replace broken image URLs
+        for badge in badges:
+            if badge["title"] in broken_images:
+                badge["img"] = broken_images[badge["title"]]
+                print(f"Replacing broken image URL for {badge['title']}")
+                print(f"New image URL: {badge['img']}")
         return self.generate_md_format(badges)
