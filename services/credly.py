@@ -60,7 +60,7 @@ class Credly:
         issuer = badge["issuer"]["entities"][0]["entity"]["name"] if badge["issuer"]["entities"] else "Unknown Issuer"
 
         activities = badge_template.get("badge_template_activities", [])
-        criteria = ", ".join(activity.get("title", "No criteria provided") for activity in activities if isinstance(activity, dict))
+        criteria = " ".join(activity.get("title", "No criteria provided") for activity in activities if isinstance(activity, dict))
 
         return {
             "title": badge_template["name"],
@@ -253,36 +253,24 @@ class Credly:
         rows = ""
         for badge in badges:
             rows += '  <tr>\n'
-            rows += f'    <td align="center" width="20%" padding="5">\n'
+            rows += f'    <td align="center" width="20%" padding="10">\n'
             rows += f'      <a href="{badge["href"]}">\n'
             rows += f'        <img src="{badge["img"]}" width="100">\n'
             rows += f'      </a><br>\n'
             rows += f'      <a href="{badge["href"]}">{badge["title"]} - {badge["issuer"]}</a>\n'
             rows += f'    </td>\n'
-            rows += f'    <td width="80%" padding="5">\n'
+            rows += f'    <td width="80%" padding="10">\n'
             description, remaining_description = self.twenty_word_limit(badge["description"])
-            rows += f'      <strong>Description:</strong> {description}{"..." if remaining_description else ""}<br>\n'
+            rows += f'      <strong>Description:</strong> {description}<br>\n'
             if remaining_description:
                 rows += f'      <details>\n'
                 rows += f'        <summary>Show more</summary>\n'
                 rows += f'        {remaining_description}\n'
                 rows += f'      </details>\n'
-            skills, remaining_skills = self.twenty_word_limit(", ".join(badge["skills"]))
-            rows += f"      <strong padding='2'>Skills:</strong> {skills}{"..." if remaining_skills else ""}<br>\n"
-            if remaining_skills:
-                rows += f'      <details>\n'
-                rows += f'        <summary>Show more</summary>\n'
-                rows += f'        {remaining_skills}\n'
-                rows += f'      </details>\n'
-            criteria, remaining_criteria = self.twenty_word_limit(badge["criteria"])
-            rows += f'      <strong padding="2">Earning Criteria:</strong> {criteria}{"..." if remaining_criteria else ""}<br>\n'
-            if remaining_criteria:
-                rows += f'      <details>\n'
-                rows += f'        <summary>Show more</summary>\n'
-                rows += f'        {remaining_criteria}\n'
-                rows += f'      </details>\n'
-            rows += f'      <strong padding="2">Time to Earn:</strong> {badge["time_to_earn"]}<br>\n'
-            rows += f'      <strong padding="2">Level:</strong> {badge.get("level", "N/A")}\n'
+            rows += f'      <strong>Skills:</strong> {", ".join(badge["skills"])}<br>\n'
+            rows += f'      <strong>Criteria:</strong> {badge["criteria"]}<br>\n'
+            rows += f'      <strong>Time to Earn:</strong> {badge["time_to_earn"]}<br>\n'
+            rows += f'      <strong>Level:</strong> {badge.get("level", "N/A")}\n'
             rows += f'    </td>\n'
             rows += '  </tr>\n'
         return rows
@@ -312,7 +300,8 @@ class Credly:
         for issuer, badges in grouped_badges.items():
             anchor = issuer.lower().replace(" ", "-")
             markdown += '<br>\n'
-            markdown += f"### {issuer} ({len(badges)}) - [Back to Top ⬆️](#user-content-free-credly-badges)\n\n"
+            markdown += f"### {issuer} ({len(badges)})\n\n"
+            markdown += f'<a href="#user-content-free-credly-badges">Back to Top ⬆️</a>\n\n'
             markdown += '<table width="100%" border="1" cellspacing="0" cellpadding="4">\n'
             markdown += '  <tr>\n'
             markdown += '    <th width="20%">Badge</th>\n'
@@ -326,7 +315,8 @@ class Credly:
             # If there are more than 5 badges, create a "more" dropdown
             if len(badges) > 5:
                 markdown += '<br>\n'
-                markdown += f'<details>\n  <summary>More {issuer} ({len(badges) - 5}  - [Back to Top ⬆️](#user-content-free-credly-badges)\n\n")</summary>\n\n'
+                markdown += f'<details>\n  <summary>More {issuer} ({len(badges) - 5}</summary>\n'
+                markdown += f'<a href="#user-content-free-credly-badges">Back to Top ⬆️</a>\n\n'
                 markdown += '<table width="100%" border="1" cellspacing="0" cellpadding="4">\n'
                 markdown += '  <tr>\n'
                 markdown += '    <th width="20%">Badge</th>\n'
