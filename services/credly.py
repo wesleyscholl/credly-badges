@@ -65,7 +65,7 @@ class Credly:
         return {
             "title": badge_template["name"],
             "href": badge_template["url"],
-            "img": badge["image"]["image_url"] if badge["image"] else badge_template["image_url"],
+            "img": badge["image_url"] if badge["image_url"] else badge_template["image_url"],
             "issuer": issuer,
             "description": badge_template["description"],
             "time_to_earn": badge_template["time_to_earn"],
