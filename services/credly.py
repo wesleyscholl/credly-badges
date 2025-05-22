@@ -310,12 +310,12 @@ class Credly:
             markdown += '  </tr>\n'
 
             # Generate rows for the first 3 badges
-            markdown += self.generate_badge_rows(badges[:3])
+            markdown += self.generate_badge_rows(badges[:1])
             markdown += '</table>\n\n'
 
             # If there are more than 3 badges, create a "more" dropdown
-            if len(badges) > 3:
-                markdown += f'<details><summary>More {issuer} ({len(badges) - 3})</summary>\n'
+            if len(badges) > 1:
+                markdown += f'<details><summary>More {issuer} ({len(badges) - 1})</summary>\n'
                 markdown += '<table width="100%" border="1" cellspacing="0" cellpadding="4">\n'
                 markdown += '  <tr>\n'
                 markdown += '    <th width="20%">Badge</th>\n'
@@ -323,7 +323,7 @@ class Credly:
                 markdown += '  </tr>\n'
 
                 # Generate rows for the remaining badges
-                markdown += self.generate_badge_rows(badges[3:])
+                markdown += self.generate_badge_rows(badges[1:])
                 markdown += '</table>\n\n'
                 markdown += '</details>'
         
