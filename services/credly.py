@@ -242,7 +242,7 @@ class Credly:
         """Helper function to limit text to 20 words. Returns the text if it is less than or equal to 20 words, otherwise returns the first 20 words followed by '...' and the remaining words as a separate string variable."""
         words = text.split()
         if len(words) <= 20:
-            return text, ""
+            return text, None
         else:
             limited_text = " ".join(words[:20]) + "..."
             remaining_text = " ".join(words[20:])
