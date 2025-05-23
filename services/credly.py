@@ -268,6 +268,23 @@ class Credly:
             rows += '  </tr>\n'
         return rows
 
+    def generate_hidden_badge_rows(self, badges):
+        """Helper function to generate hidden table rows for a list of badges."""
+        rows = ""
+        for badge in badges:
+            rows += '  <tr>\n'
+            rows += f'    <td align="center" width="20%" padding="10">\n'
+            rows += f'      <a href="{badge["href"]}">\n'
+            rows += f'        <img src="{badge["img"]}" width="100">\n'
+            rows += f'      </a><br>\n'
+            rows += f'      <a href="{badge["href"]}">{badge["title"]} - {badge["issuer"]}</a>\n'
+            rows += f'    </td>\n'
+            rows += f'    <td width="80%" padding="10">\n'
+            rows += f'      <strong>Read more <a href="{badge["href"]}">here</a><br>\n'
+            rows += f'    </td>\n'
+            rows += '  </tr>\n'
+        return rows
+
     def generate_md_format(self, badges):
         if not badges:
             return None
@@ -305,7 +322,7 @@ class Credly:
             markdown += '</table>\n\n'
 
             # If there are more than 3 badges, create a "more" dropdown
-            if len(badges) > 1:
+            if len(badges) > 3:
                 markdown += f'<details><summary>More {issuer} ({len(badges) - 3})</summary>\n'
                 markdown += '<table width="100%" border="1" cellspacing="0" cellpadding="4">\n'
                 markdown += '  <tr>\n'
@@ -314,7 +331,7 @@ class Credly:
                 markdown += '  </tr>\n'
 
                 # Generate rows for the remaining badges
-                markdown += self.generate_badge_rows(badges[3:])
+                markdown += self.generate_hidden_badge_rows(badges[3:])
                 markdown += '</table>\n\n'
                 markdown += '</details>'
         
