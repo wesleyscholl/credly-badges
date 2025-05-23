@@ -282,19 +282,16 @@ class Credly:
 
         markdown = f"## Total Badges: ({len(badges)})\n\n"
         markdown += f"## Issuing Organizations: ({len(grouped_badges)})\n\n"
-        for issuer in grouped_badges.keys():
-            anchor = issuer.lower().replace(" ", "-").replace(".", "-")
+
+        for issuer, badges in grouped_badges.items():
+            anchor = issuer.lower().replace(" ", "-")
+            markdown += f"### {issuer} ({len(badges)})\n"
             markdown += f'\n\n'
             markdown += f'<strong><a href="#user-content-free-credly-badges">Back to Top ⬆️</a></strong>\n\n'
             markdown += f'\n\n'
             markdown += "| Issuing Organization | Description | Credly Badges | Verified | Organization Link |\n"
             markdown += "|        :---:         |-------------|     :---:     |   :---:  |       :---:       |\n"
             markdown += f"| <img src='{self.org_logos(issuer)}' height='100' /><br>[{issuer}](#{anchor}-{len(grouped_badges.get(issuer, []))}) | {self.org_descriptions(issuer)} | {len(grouped_badges.get(issuer, []))} | ✅ | [{issuer}]({self.org_links(issuer)}) |\n"
-        markdown += "\n\n"
-
-        for issuer, badges in grouped_badges.items():
-            anchor = issuer.lower().replace(" ", "-")
-            markdown += f"### {issuer} ({len(badges)})\n"
             markdown += f'\n\n'
             markdown += '<table width="100%" border="1" cellspacing="0" cellpadding="4">\n'
             markdown += '  <tr>\n'
