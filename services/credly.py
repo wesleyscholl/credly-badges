@@ -238,15 +238,14 @@ class Credly:
         else:
             return "..."
 
-    def twenty_word_limit(self, text):
-        """Helper function to limit text to 20 words. Returns the text if it is less than or equal to 20 words, otherwise returns the first 20 words followed by '...' and the remaining words as a separate string variable."""
+    def ten_word_limit(self, text):
+        """Helper function to limit text to 20 words. Returns the text if it is less than or equal to 10 words, otherwise returns just the first 10 words"""
         words = text.split()
-        if len(words) <= 20:
+        if len(words) <= 10:
             return text, None
         else:
-            limited_text = " ".join(words[:20]) + "..."
-            remaining_text = " ".join(words[20:])
-            return limited_text, remaining_text
+            limited_text = " ".join(words[:10]) + "..."
+            return limited_text
 
     def generate_badge_rows(self, badges):
         """Helper function to generate table rows for a list of badges."""
@@ -260,13 +259,7 @@ class Credly:
             rows += f'      <a href="{badge["href"]}">{badge["title"]} - {badge["issuer"]}</a>\n'
             rows += f'    </td>\n'
             rows += f'    <td width="80%" padding="10">\n'
-            description, remaining_description = self.twenty_word_limit(badge["description"])
-            rows += f'      <strong>Description:</strong> {description}<br>\n'
-            if remaining_description:
-                rows += f'      <details>\n'
-                rows += f'        <summary>Show more</summary>\n'
-                rows += f'        {remaining_description}\n'
-                rows += f'      </details>\n'
+            rows += f'      <strong>Description:</strong> {self.ten_word_limit(badge["description"])} Read more <a href="{badge["href"]}">here</a><br>\n'
             rows += f'      <strong>Skills:</strong> {", ".join(badge["skills"])}<br>\n'
             rows += f'      <strong>Criteria:</strong> {badge["criteria"]}<br>\n'
             rows += f'      <strong>Time to Earn:</strong> {badge["time_to_earn"]}<br>\n'
@@ -288,19 +281,19 @@ class Credly:
             grouped_badges[issuer].append(badge)
 
         markdown = f"## Total Badges: ({len(badges)})\n\n"
-        markdown += f"## List of Issuing Organizations: ({len(grouped_badges)})\n\n"
-        markdown += "| Issuing Organization | Description | Credly Badges | Verified | Organization Link |\n"
-        markdown += "|        :---:         |-------------|     :---:     |   :---:  |       :---:       |\n"
+        markdown += f"## Issuing Organizations: ({len(grouped_badges)})\n\n"
         for issuer in grouped_badges.keys():
             anchor = issuer.lower().replace(" ", "-").replace(".", "-")
+            markdown += f'\n\n'
+            markdown += f'<strong><a href="#user-content-free-credly-badges">Back to Top ⬆️</a></strong>\n\n'
+            markdown += f'\n\n'
+            markdown += "| Issuing Organization | Description | Credly Badges | Verified | Organization Link |\n"
+            markdown += "|        :---:         |-------------|     :---:     |   :---:  |       :---:       |\n"
             markdown += f"| <img src='{self.org_logos(issuer)}' height='100' /><br>[{issuer}](#{anchor}-{len(grouped_badges.get(issuer, []))}) | {self.org_descriptions(issuer)} | {len(grouped_badges.get(issuer, []))} | ✅ | [{issuer}]({self.org_links(issuer)}) |\n"
         markdown += "\n\n"
 
         for issuer, badges in grouped_badges.items():
             anchor = issuer.lower().replace(" ", "-")
-            markdown += f'\n\n'
-            markdown += f'<strong><a href="#user-content-free-credly-badges">Back to Top ⬆️</a></strong>\n\n'
-            markdown += f'\n\n'
             markdown += f"### {issuer} ({len(badges)})\n"
             markdown += f'\n\n'
             markdown += '<table width="100%" border="1" cellspacing="0" cellpadding="4">\n'
@@ -310,12 +303,12 @@ class Credly:
             markdown += '  </tr>\n'
 
             # Generate rows for the first 3 badges
-            markdown += self.generate_badge_rows(badges[:1])
+            markdown += self.generate_badge_rows(badges[:3])
             markdown += '</table>\n\n'
 
             # If there are more than 3 badges, create a "more" dropdown
             if len(badges) > 1:
-                markdown += f'<details><summary>More {issuer} ({len(badges) - 1})</summary>\n'
+                markdown += f'<details><summary>More {issuer} ({len(badges) - 3})</summary>\n'
                 markdown += '<table width="100%" border="1" cellspacing="0" cellpadding="4">\n'
                 markdown += '  <tr>\n'
                 markdown += '    <th width="20%">Badge</th>\n'
@@ -323,7 +316,7 @@ class Credly:
                 markdown += '  </tr>\n'
 
                 # Generate rows for the remaining badges
-                markdown += self.generate_badge_rows(badges[1:])
+                markdown += self.generate_badge_rows(badges[3:])
                 markdown += '</table>\n\n'
                 markdown += '</details>'
         
