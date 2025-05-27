@@ -314,7 +314,7 @@ class Credly:
             markdown += '<table width="100%" border="1" cellspacing="0" cellpadding="4">\n'
             markdown += '  <tr>\n'
             markdown += '    <th width="20%">Badge</th>\n'
-            markdown += '    <th width="80%">Description, Time to Earn, Skills & Earning Criteria</th>\n'
+            markdown += '    <th width="80%">Description</th>\n'
             markdown += '  </tr>\n'
 
             # Generate rows for the first 3 badges
@@ -327,7 +327,7 @@ class Credly:
                 markdown += '<table width="100%" border="1" cellspacing="0" cellpadding="4">\n'
                 markdown += '  <tr>\n'
                 markdown += '    <th width="20%">Badge</th>\n'
-                markdown += '    <th width="80%">Description, Time to Earn, Skills & Earning Criteria</th>\n'
+                markdown += '    <th width="80%">Description</th>\n'
                 markdown += '  </tr>\n'
 
                 # Generate rows for the remaining badges

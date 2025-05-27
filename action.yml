@@ -24,7 +24,7 @@ inputs:
     required: false
   
   CREDLY_SORT:
-    description: "The sort type for return credly badges [RECENT/POPULAR]"
+    description: "The sort type for return credly badges [created_at, issued_at, state_updated_at]"
     default: RECENT
     required: false
 
