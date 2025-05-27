@@ -299,6 +299,10 @@ class Credly:
 
         markdown = f"## Total Badges: ({len(badges)})\n\n"
         markdown += f"## Issuing Organizations: ({len(grouped_badges)})\n\n"
+        for issuer in grouped_badges:
+            markdown += f"[{issuer}](#{issuer.lower().replace(' ', '-')}), "
+        markdown = markdown.rstrip(", ")  # Remove trailing comma
+        markdown += f'\n\n'
 
         for issuer, badges in grouped_badges.items():
             anchor = issuer.lower().replace(" ", "-")
