@@ -125,6 +125,7 @@ class Credly:
             "Software AG": "https://images.credly.com/size/200x200/images/cb804039-a63a-4e8e-82c8-058b6fcff38a/blob.png",
             "The Linux Foundation": "https://images.credly.com/size/200x200/images/e6066b96-c59d-49b6-87cc-d8873022e84f/blob.png",
             "Tigera": "https://images.credly.com/size/200x200/images/44031b8f-9364-42fb-9ba7-37858c650511/blob.png",
+            "Ververica": "https://images.credly.com/size/400x400/images/190e5ac2-80ea-4f85-b553-0f78addbd8f8/blob.png",
             "ZEDEDA": "https://images.credly.com/size/200x200/images/32b1c161-6993-4b70-a104-ef9301b3b456/blob.png",
             "Zendesk": "https://images.credly.com/size/200x200/images/a648362b-1174-4b27-93f1-a3e12fe6d49a/blob.png"
         }
@@ -177,6 +178,7 @@ class Credly:
             "Software AG": "https://www.credly.com/organizations/software-ag/badges",
             "The Linux Foundation": "https://www.credly.com/organizations/the-linux-foundation/badges",
             "Tigera": "https://www.credly.com/organizations/tigera/badges",
+            "Ververica": "https://www.credly.com/organizations/ververica/badges",
             "ZEDEDA": "https://www.credly.com/organizations/zededa/badges",
             "Zendesk": "https://www.credly.com/organizations/zendesk/badges"
         }
@@ -229,6 +231,7 @@ class Credly:
             "Software AG": "Software AG is a global software company providing solutions for integration, API management, and business process management.",
             "The Linux Foundation": "The Linux Foundation is a nonprofit that supports open-source innovation and provides training in Linux and emerging technologies.",
             "Tigera": "Tigera is a cybersecurity company specializing in cloud-native security and observability for Kubernetes environments.",
+            "Ververica": "Ververica is a data streaming company known for its contributions to Apache Flink and stream processing solutions.",
             "ZEDEDA": "ZEDEDA offers edge computing orchestration solutions for deploying and managing applications at the network edge.",
             "Zendesk": "Zendesk is a customer service and engagement platform that helps businesses manage support and improve customer satisfaction."
         }
