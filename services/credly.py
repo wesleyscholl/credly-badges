@@ -308,7 +308,7 @@ class Credly:
         markdown += f'\n\n'
 
         for issuer, badges in grouped_badges.items():
-            anchor = issuer.lower().replace(" ", "-")
+            anchor = issuer.lower().replace(" ", "-").replace(".", "")
             markdown += f'\n\n'
             markdown += f"### {issuer} ({len(badges)})\n"
             markdown += f'\n\n'
