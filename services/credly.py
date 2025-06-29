@@ -352,7 +352,7 @@ class Credly:
         #                 markdown += self.generate_org_logos_links_rows([grouped_badges[issuer][i]])
         #         markdown += "</tr>\n"
         #     markdown += "</table>\n"
-            markdown += f"[{issuer}](#{issuer.lower().replace(' ', '-').replace('.', '')}-{len(grouped_badges.get(issuer, []))}), "
+        markdown += f"[{issuer}](#{issuer.lower().replace(' ', '-').replace('.', '')}-{len(grouped_badges.get(issuer, []))}), "
         markdown = markdown.rstrip(", ")  # Remove trailing comma
         markdown += f'\n\n'
 
