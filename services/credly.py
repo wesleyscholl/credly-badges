@@ -247,14 +247,30 @@ class Credly:
         else:
             return "..."
 
-    def ten_word_limit(self, text):
-        """Helper function to limit text to 20 words. Returns the text if it is less than or equal to 10 words, otherwise returns just the first 10 words"""
+    def twenty_word_limit(self, text):
+        """Helper function to limit text to less than or equal to 20 words, otherwise returns just the first 20 words"""
         words = text.split()
-        if len(words) <= 10:
+        if len(words) <= 20:
             return text, None
         else:
-            limited_text = " ".join(words[:10]) + "..."
+            limited_text = " ".join(words[:20]) + "..."
             return limited_text
+
+    def generate_org_logos_links_rows(self, badges):
+        """Helper function to generate table rows for organization logos and links."""
+        rows = ""
+        for badge in badges:
+            issuer = badge["issuer"]
+            logo = self.org_logos(issuer)
+            link = self.org_links(issuer)
+            if logo and link:
+                rows += f'    <td align="center" width="20%" padding="10">\n'
+                rows += f'      <a href="{link}">\n'
+                rows += f'        <img src="{logo}" width="100">\n'
+                rows += f'      </a><br>\n'
+                rows += f'      <a href="#{issuer.lower().replace(" ", "-").replace(".", "")}-{len(badges.get(issuer, []))}">{issuer}</a>\n'
+                rows += f'    </td>\n'
+        return rows
 
     def generate_badge_rows(self, badges):
         """Helper function to generate table rows for a list of badges."""
@@ -268,19 +284,29 @@ class Credly:
             rows += f'      <a href="{badge["href"]}">{badge["title"]} - {badge["issuer"]}</a>\n'
             rows += f'    </td>\n'
             rows += f'    <td width="80%" padding="10">\n'
-            rows += f'      <strong>Description:</strong> {self.ten_word_limit(badge["description"])} Read more <a href="{badge["href"]}">here</a><br>\n'
+            rows += f'      <strong>Description:</strong> {self.twenty_word_limit(badge["description"])} <a href="{badge["href"]}">Read more here</a><br>\n'
+            # Only render up to 5 skills
+            if badge["skills"]:
+                if len(badge["skills"]) > 5:
+                    badge["skills"] = badge["skills"][:5]
             rows += f'      <strong>Skills:</strong> {", ".join(badge["skills"])}<br>\n'
-            rows += f'      <strong>Criteria:</strong> {badge["criteria"]}<br>\n'
-            rows += f'      <strong>Time to Earn:</strong> {badge["time_to_earn"]}<br>\n'
+            rows += f'      <strong>Criteria:</strong> {self.twenty_word_limit(badge["criteria"])} <a href="{badge["href"]}">Read more here</a><br>\n'
+            rows += f'      <strong>Time to Earn:</strong> {badge.get("time_to_earn", "N/A")}<br>\n'
             rows += f'      <strong>Level:</strong> {badge.get("level", "N/A")}\n'
             rows += f'    </td>\n'
             rows += '  </tr>\n'
         return rows
 
     def generate_hidden_badge_rows(self, badges):
-        """Helper function to generate hidden table rows for a list of badges."""
+        """Helper function to generate hidden table rows for a list of badges, filtering out paid training badges."""
         rows = ""
         for badge in badges:
+            # Filter out paid training badges by title and issuer
+            if (
+                (badge["title"].strip() == "LFS256: DevOps and Workflow Management with Argo" and badge["issuer"].strip() == "The Linux Foundation") or
+                (badge["title"].strip() == "CAPA: Certified Argo Project Associate" and badge["issuer"].strip() == "The Linux Foundation")
+            ):
+                continue
             rows += '  <tr>\n'
             rows += f'    <td align="center" width="20%" padding="10">\n'
             rows += f'      <a href="{badge["href"]}">\n'
@@ -308,8 +334,21 @@ class Credly:
 
         markdown = f"## Total Badges: ({len(badges)})\n\n"
         markdown += f"## Issuing Organizations: ({len(grouped_badges)})\n\n"
+        markdown += "<table width='100%' border='1' cellspacing='0' cellpadding='4'>\n"
         for issuer in grouped_badges:
-            markdown += f"[{issuer}](#{issuer.lower().replace(' ', '-').replace(".", "")}-{len(grouped_badges.get(issuer, []))}), "
+            # Create a table with 5 columns, each containing the org logo a link to the issuer's badges anchor
+            if len(grouped_badges[issuer]) > 0:
+                # Loop up to 5 badges per row
+                markdown += f"<tr>\n"
+                for i in range(0, min(5, len(grouped_badges[issuer]))):
+                    badge = grouped_badges[issuer][i]
+                    logo = self.org_logos(issuer)
+                    link = self.org_links(issuer)
+                    if logo and link:
+                        markdown += self.generate_org_logos_links_rows(grouped_badges[issuer])
+                markdown += "</tr>\n"
+            markdown += "</table>\n"
+            markdown += f"[{issuer}](#{issuer.lower().replace(' ', '-').replace('.', '')}-{len(grouped_badges.get(issuer, []))}), "
         markdown = markdown.rstrip(", ")  # Remove trailing comma
         markdown += f'\n\n'
 
