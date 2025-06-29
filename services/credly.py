@@ -259,8 +259,11 @@ class Credly:
     def generate_org_logos_links_rows(self, badges):
         """Helper function to generate table rows for organization logos and links."""
         rows = ""
-        for badge in badges:
-            issuer = badge["issuer"]
+        # Only unique issuers
+        unique_issuers = {badge["issuer"] for badge in badges}
+        # Sort issuers alphabetically
+        sorted_issuers = sorted(unique_issuers, key=lambda x: x.lower())
+        for issuer in sorted_issuers:
             logo = self.org_logos(issuer)
             link = self.org_links(issuer)
             if logo and link:
@@ -345,7 +348,8 @@ class Credly:
                     logo = self.org_logos(issuer)
                     link = self.org_links(issuer)
                     if logo and link:
-                        markdown += self.generate_org_logos_links_rows(grouped_badges[issuer])
+                        # Need to pass a unique list or dict of issuers to the generate_org_logos_links_rows function
+                        markdown += self.generate_org_logos_links_rows([grouped_badges[issuer][i]])
                 markdown += "</tr>\n"
             markdown += "</table>\n"
             markdown += f"[{issuer}](#{issuer.lower().replace(' ', '-').replace('.', '')}-{len(grouped_badges.get(issuer, []))}), "
