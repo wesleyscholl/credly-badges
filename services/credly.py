@@ -268,7 +268,7 @@ class Credly:
                 rows += f'      <a href="{link}">\n'
                 rows += f'        <img src="{logo}" width="100">\n'
                 rows += f'      </a><br>\n'
-                rows += f'      <a href="#{issuer.lower().replace(" ", "-").replace(".", "")}-{len(badges.get(issuer, []))}">{issuer}</a>\n'
+                rows += f'      <a href="#{issuer.lower().replace(" ", "-").replace(".", "")}-{len(badges)}">{issuer}</a>\n'
                 rows += f'    </td>\n'
         return rows
 
