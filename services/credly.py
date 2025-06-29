@@ -256,25 +256,6 @@ class Credly:
             limited_text = " ".join(words[:20]) + "..."
             return limited_text
 
-    def generate_org_logos_links_rows(self, badges):
-        """Helper function to generate table rows for organization logos and links."""
-        rows = ""
-        # Only unique issuers
-        unique_issuers = {badge["issuer"] for badge in badges}
-        # Sort issuers alphabetically
-        sorted_issuers = sorted(unique_issuers, key=lambda x: x.lower())
-        for issuer in sorted_issuers:
-            logo = self.org_logos(issuer)
-            link = self.org_links(issuer)
-            if logo and link:
-                rows += f'    <td align="center" width="20%" padding="10">\n'
-                rows += f'      <a href="{link}">\n'
-                rows += f'        <img src="{logo}" width="100">\n'
-                rows += f'      </a><br>\n'
-                rows += f'      <a href="#{issuer.lower().replace(" ", "-").replace(".", "")}-{len(badges)}">{issuer}</a>\n'
-                rows += f'    </td>\n'
-        return rows
-
     def generate_badge_rows(self, badges):
         """Helper function to generate table rows for a list of badges."""
         rows = ""
@@ -337,22 +318,31 @@ class Credly:
 
         markdown = f"## Total Badges: ({len(badges)})\n\n"
         markdown += f"## Issuing Organizations: ({len(grouped_badges)})\n\n"
-        # markdown += "<table width='100%' border='1' cellspacing='0' cellpadding='4'>\n"
-        # for issuer in grouped_badges:
-        #     # Create a table with 5 columns, each containing the org logo a link to the issuer's badges anchor
-        #     if len(grouped_badges[issuer]) > 0:
-        #         # Loop up to 5 badges per row
-        #         markdown += f"<tr>\n"
-        #         for i in range(0, min(5, len(grouped_badges[issuer]))):
-        #             badge = grouped_badges[issuer][i]
-        #             logo = self.org_logos(issuer)
-        #             link = self.org_links(issuer)
-        #             if logo and link:
-        #                 # Need to pass a unique list or dict of issuers to the generate_org_logos_links_rows function
-        #                 markdown += self.generate_org_logos_links_rows([grouped_badges[issuer][i]])
-        #         markdown += "</tr>\n"
-        #     markdown += "</table>\n"
-        markdown += f"[{issuer}](#{issuer.lower().replace(' ', '-').replace('.', '')}-{len(grouped_badges.get(issuer, []))}), "
+        unique_issuers = list(grouped_badges.keys())
+        unique_issuers.sort(key=lambda x: x.lower())  # Sort issuers alphabetically
+        markdown += "<table width='100%' border='1' cellspacing='0' cellpadding='4'>\n"
+        for idx, issuer in enumerate(unique_issuers):
+            if idx % 5 == 0:
+                if idx != 0:
+                    markdown += "</tr>\n"
+                markdown += "<tr>\n"
+            logo = self.org_logos(issuer)
+            link = self.org_links(issuer)
+            anchor = issuer.lower().replace(" ", "-").replace(".", "")
+            badge_count = len(grouped_badges[issuer])
+            if logo and link:
+                markdown += f'  <td align="center" width="20%" padding="10">\n'
+                markdown += f'    <a href="{link}">\n'
+                markdown += f'      <img src="{logo}" width="100">\n'
+                markdown += f'    </a><br>\n'
+                markdown += f'    <a href="#{anchor}-{badge_count}">{issuer}</a>\n'
+                markdown += f'  </td>\n'
+        # Close the last row if needed
+        if len(unique_issuers) % 5 != 0:
+            markdown += "</tr>\n"
+        markdown += "</table>\n"
+        for issuer in unique_issuers:
+            markdown += f"[{issuer}](#{issuer.lower().replace(' ', '-').replace('.', '')}-{len(grouped_badges.get(issuer, []))}), "
         markdown = markdown.rstrip(", ")  # Remove trailing comma
         markdown += f'\n\n'
 
