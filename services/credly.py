@@ -31,7 +31,7 @@ class Credly:
             "User-Agent": "Credly/1.28.0/2025041702 (iOS; 18.4.1; iPhone14,4)",
             "Accept": "application/json",
         }
-
+        # Fetch badges from Credly API
         while True:
             url = f"{self.BASE_URL}?page={page}&state=accepted,pending"
             response = requests.get(url, headers=headers)
