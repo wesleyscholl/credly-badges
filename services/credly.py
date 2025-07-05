@@ -161,14 +161,16 @@ class Credly:
             link = org_links(issuer)
             anchor = issuer.lower().replace(" ", "-").replace(".", "")
             badge_count = len(grouped_badges[issuer])
+            markdown += '  <td align="center" width="20%" padding="10">\n'
             if logo and link:
-                markdown += f'  <td align="center" width="20%" padding="10">\n'
                 markdown += f'    <a href="{link}">\n'
                 markdown += f'      <img src="{logo}" width="100">\n'
                 markdown += f'    </a><br>\n'
                 markdown += f'    <a href="#{anchor}-{badge_count}">{issuer}</a>\n'
-                markdown += f'  </td>\n'
-                cell_count += 1
+            else:
+                markdown += f'    {issuer}\n'
+            markdown += '  </td>\n'
+            cell_count += 1
             if cell_count == 5:
                 markdown += "</tr>\n"
                 cell_count = 0
