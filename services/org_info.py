@@ -43,7 +43,7 @@ def org_logos(issuer):
         "Pendo": "https://images.credly.com/size/200x200/images/648b5cb8-8fc1-44df-9a2e-6a4f3e86f49e/blob.png",
         "ProcessMaker": "https://images.credly.com/size/200x200/images/7b79da44-2fa1-4bbf-b638-11f7e3284908/blob",
         "Project Management Institute": "https://images.credly.com/size/200x200/images/31da017a-a50c-48a8-8012-c4811063581f/blob.png",
-        "Red Hat": "https://images.credly.com/size/200x200/images/7b6eaf7c-6b7e-4b7e-8c7e-7b7eaf7c7b7e/blob.png",
+        "Red Hat": "https://images.credly.com/size/200x200/images/e0c8fa7e-3010-4e38-ba2b-2969641bb75c/blob.png",
         "SAP": "https://images.credly.com/size/200x200/images/cc566727-d258-4291-8bb5-cfffb53ebb9a/SAP_org.png",
         "SAS": "https://images.credly.com/size/200x200/images/b108f83f-fedf-4479-8515-48a48a9df862/blob.png",
         "Software AG": "https://images.credly.com/size/200x200/images/cb804039-a63a-4e8e-82c8-058b6fcff38a/blob.png",
