@@ -169,9 +169,12 @@ class Credly:
                 markdown += f'    </a><br>\n'
                 markdown += f'    <a href="#{anchor}-{badge_count}">{issuer}</a>\n'
                 markdown += f'  </td>\n'
-        # Close the last row if needed
-        if len(unique_issuers) % 5 != 0:
-            markdown += "</tr>\n"
+        # Pad the last row if needed
+        remaining = len(unique_issuers) % 5
+        if remaining != 0:
+            for _ in range(5 - remaining):
+                markdown += '  <td></td>\n'
+        markdown += "</tr>\n"
         markdown += "</table>\n"
         markdown += f'\n\n'
         for issuer in unique_issuers:
