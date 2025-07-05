@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Credly Badges Showcase</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
+    <style>
+        .badge-logo { max-width: 100px; margin: 10px; }
+        .org-table td { vertical-align: top; text-align: center; }
+        .section-title { margin-top: 2rem; }
+    </style>
+</head>
+<body>
+    <section class="section">
+        <div class="container">
+            <h1 class="title">Credly Badges Showcase</h1>
+            <p class="subtitle">A Python project to fetch, organize, and display digital badges and issuing organizations from Credly.</p>
+            <div class="content">
+                <h2 class="section-title">Features</h2>
+                <ul>
+                    <li>Fetches badges and organization info from Credly API</li>
+                    <li>Generates Markdown and HTML tables of badges and organizations</li>
+                    <li>Handles organization logos, links, and badge counts</li>
+                    <li>Supports any number of organizations and badges</li>
+                </ul>
+                <h2 class="section-title">Sample Organization Table</h2>
+                <p>This is a sample of how organizations and their logos are displayed:</p>
+                <table class="table org-table is-bordered is-fullwidth">
+                    <tr>
+                        <td><img class="badge-logo" src="https://images.credly.com/size/200x200/images/7b6eaf7c-6b7e-4b7e-8c7e-7b7eaf7c7b7e/blob.png" alt="Red Hat"><br><a href="https://www.credly.com/organizations/red-hat/badges">Red Hat</a></td>
+                        <td><img class="badge-logo" src="https://images.credly.com/size/200x200/images/ca55a8cf-9e9c-47e3-9378-d225d63dd1e5/blob.png" alt="Google Cloud"><br><a href="https://www.credly.com/organizations/google-cloud/badges">Google Cloud</a></td>
+                        <td><img class="badge-logo" src="https://images.credly.com/size/200x200/images/854d76bf-4f74-4d51-98a0-d969214bfba7/IBM%2BLogo%2Bfor%2BAcclaim%2BProfile.png" alt="IBM"><br><a href="https://www.credly.com/organizations/ibm/badges">IBM</a></td>
+                        <td><img class="badge-logo" src="https://images.credly.com/size/200x200/images/cc566727-d258-4291-8bb5-cfffb53ebb9a/SAP_org.png" alt="SAP"><br><a href="https://www.credly.com/organizations/sap/badges">SAP</a></td>
+                        <td><img class="badge-logo" src="https://images.credly.com/size/200x200/images/b108f83f-fedf-4479-8515-48a48a9df862/blob.png" alt="SAS"><br><a href="https://www.credly.com/organizations/sas/badges">SAS</a></td>
+                    </tr>
+                </table>
+                <h2 class="section-title">How It Works</h2>
+                <ol>
+                    <li>Configure your Credly API token and settings in <code>settings.py</code>.</li>
+                    <li>Run the Python scripts to fetch and process badge/organization data.</li>
+                    <li>Generate Markdown or HTML output for use in documentation or web pages.</li>
+                </ol>
+                <h2 class="section-title">Get Started</h2>
+                <pre><code>pip install -r requirements.txt
+python services/credly.py</code></pre>
+                <p>See the <a href="README.md">README</a> for more details.</p>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
