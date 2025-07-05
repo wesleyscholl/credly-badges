@@ -153,10 +153,9 @@ class Credly:
         unique_issuers = list(grouped_badges.keys())
         unique_issuers.sort(key=lambda x: x.lower())  # Sort issuers alphabetically
         markdown += "<table width='100%' border='1' cellspacing='0' cellpadding='4'>\n"
+        cell_count = 0
         for idx, issuer in enumerate(unique_issuers):
-            if idx % 5 == 0:
-                if idx != 0:
-                    markdown += "</tr>\n"
+            if cell_count == 0:
                 markdown += "<tr>\n"
             logo = org_logos(issuer)
             link = org_links(issuer)
@@ -169,12 +168,14 @@ class Credly:
                 markdown += f'    </a><br>\n'
                 markdown += f'    <a href="#{anchor}-{badge_count}">{issuer}</a>\n'
                 markdown += f'  </td>\n'
-        # Pad the last row if needed
-        remaining = len(unique_issuers) % 5
-        if remaining != 0:
-            for _ in range(5 - remaining):
+                cell_count += 1
+            if cell_count == 5:
+                markdown += "</tr>\n"
+                cell_count = 0
+        if cell_count > 0:
+            for _ in range(5 - cell_count):
                 markdown += '  <td></td>\n'
-        markdown += "</tr>\n"
+            markdown += "</tr>\n"
         markdown += "</table>\n"
         markdown += f'\n\n'
         for issuer in unique_issuers:
