@@ -124,7 +124,7 @@ class Credly:
             rows += f'      </a><br>\n'
             rows += f'      <a href="{badge["href"]}">{badge["title"]} - {badge["issuer"]}</a>\n'
             rows += f'    </td>\n'
-            rows += f'    <td width="80%" padding="10">\n'
+            rows += f'    <td width="80%" style="padding:10px">\n'
             rows += f'      <strong>Read more <a href="{badge["href"]}">here</a><br>\n'
             rows += f'    </td>\n'
             rows += '  </tr>\n'
