@@ -118,7 +118,7 @@ class Credly:
             ):
                 continue
             rows += '  <tr>\n'
-            rows += f'    <td align="center" width="20%" padding="10">\n'
+            rows += f'    <td align="center" width="20%" style="padding:10px">\n'
             rows += f'      <a href="{badge["href"]}">\n'
             rows += f'        <img src="{badge["img"]}" width="100">\n'
             rows += f'      </a><br>\n'
@@ -133,7 +133,8 @@ class Credly:
     def generate_md_format(self, badges):
         if not badges:
             return None
-
+    
+        # Group badges by issuer
         sorted_badges = sorted(badges, key=lambda x: x["issuer"].lower())
         grouped_badges = {}
         for badge in sorted_badges:
@@ -141,21 +142,22 @@ class Credly:
             if issuer not in grouped_badges:
                 grouped_badges[issuer] = []
             grouped_badges[issuer].append(badge)
-
+    
+        # --- Issuer summary table ---
         markdown = f"## Total Badges: ({len(badges)})\n\n"
         markdown += f"## Issuing Organizations: ({len(grouped_badges)})\n\n"
         unique_issuers = list(grouped_badges.keys())
-        unique_issuers.sort(key=lambda x: x.lower())  # Sort issuers alphabetically
+        unique_issuers.sort(key=lambda x: x.lower())
         markdown += "<table width='100%' border='1' cellspacing='0' cellpadding='4'>\n"
         cell_count = 0
-        for idx, issuer in enumerate(unique_issuers):
+        for issuer in unique_issuers:
             if cell_count == 0:
                 markdown += "<tr>\n"
             logo = org_logos(issuer)
             link = org_links(issuer)
             anchor = issuer.lower().replace(" ", "-").replace(".", "").replace("-training-and-certification", "")
             badge_count = len(grouped_badges[issuer])
-            markdown += '  <td align="center" width="20%" padding="10">\n'
+            markdown += f'  <td align="center" width="20%" style="padding:10px">\n'
             if logo and link:
                 markdown += f'    <a href="{link}">\n'
                 markdown += f'      <img src="{logo}" width="100">\n'
@@ -172,48 +174,40 @@ class Credly:
             for _ in range(5 - cell_count):
                 markdown += '  <td></td>\n'
             markdown += "</tr>\n"
-        markdown += "</table>\n"
-        markdown += f'\n\n'
+        markdown += "</table>\n\n"  # <-- make sure summary table is fully closed
+    
+        # --- Link list to issuers ---
         for issuer in unique_issuers:
             markdown += f"[{issuer}](#{issuer.lower().replace(' ', '-').replace('.', '')}-{len(grouped_badges.get(issuer, []))}), "
-        markdown = markdown.rstrip(", ")  # Remove trailing comma
-        markdown += f'\n\n'
-
+        markdown = markdown.rstrip(", ")
+        markdown += "\n\n"
+    
+        # --- Badge tables ---
         for issuer, badges in grouped_badges.items():
             anchor = issuer.lower().replace(" ", "-").replace(".", "").replace("-training-and-certification", "")
-            markdown += f'\n\n'
-            markdown += f"### {issuer} ({len(badges)})\n"
-            markdown += f'\n\n'
+            markdown += f"\n\n### {issuer} ({len(badges)})\n\n"
             markdown += f'<strong><a href="#user-content-free-credly-badges">Back to Top ⬆️</a></strong>\n\n'
-            markdown += f'\n\n'
+    
+            # Header table for issuer info
             markdown += "| Issuing Organization | Description | Credly Badges | Verified | Organization Link |\n"
             markdown += "|        :---:         |-------------|     :---:     |   :---:  |       :---:       |\n"
-            markdown += f"| <img src='{org_logos(issuer)}' height='100' /><br>[{issuer}](#{anchor}-{len(grouped_badges.get(issuer, []))}) | {org_descriptions(issuer)} | {len(grouped_badges.get(issuer, []))} | ✅ | [{issuer}]({org_links(issuer)}) |\n"
-            markdown += f'\n\n'
+            markdown += f"| <img src='{org_logos(issuer)}' height='100' /><br>[{issuer}](#{anchor}-{len(badges)}) | {org_descriptions(issuer)} | {len(badges)} | ✅ | [{issuer}]({org_links(issuer)}) |\n\n"
+    
+            # --- First 3 badges ---
             markdown += '<table width="100%" border="1" cellspacing="0" cellpadding="4">\n'
-            markdown += '  <tr>\n'
-            markdown += '    <th width="20%">Badge</th>\n'
-            markdown += '    <th width="80%">Description</th>\n'
-            markdown += '  </tr>\n'
-
-            # Generate rows for the first 3 badges
+            markdown += '  <tr>\n    <th width="20%">Badge</th>\n    <th width="80%">Description</th>\n  </tr>\n'
             markdown += self.generate_badge_rows(badges[:3])
-            markdown += '</table>\n\n'
-
-            # If there are more than 3 badges, create a "more" dropdown
+            markdown += '</table>\n\n'  # <-- ensure table is fully closed
+    
+            # --- Remaining badges in <details> ---
             if len(badges) > 3:
-                markdown += f'<details><summary>More {issuer} ({len(badges) - 3})</summary>\n'
+                markdown += f'<details><summary>More {issuer} ({len(badges) - 3})</summary>\n\n'
                 markdown += '<table width="100%" border="1" cellspacing="0" cellpadding="4">\n'
-                markdown += '  <tr>\n'
-                markdown += '    <th width="20%">Badge</th>\n'
-                markdown += '    <th width="80%">Description</th>\n'
-                markdown += '  </tr>\n'
-
-                # Generate rows for the remaining badges
+                markdown += '  <tr>\n    <th width="20%">Badge</th>\n    <th width="80%">Description</th>\n  </tr>\n'
                 markdown += self.generate_hidden_badge_rows(badges[3:])
                 markdown += '</table>\n\n'
-                markdown += '</details>'
-        
+                markdown += '</details>\n\n'  # <-- make sure <details> is closed
+
         # Print tail of the markdown
         print(markdown.split("\n")[-100:])
         return markdown
