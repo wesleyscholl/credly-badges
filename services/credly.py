@@ -89,27 +89,26 @@ class Credly:
             return limited_text
 
     def generate_badge_rows(self, badges):
-        """Helper function to generate table rows for a list of badges."""
         rows = ""
         for badge in badges:
+            desc, _ = self.twenty_word_limit(badge["description"])
+            criteria, _ = self.twenty_word_limit(badge["criteria"])
             rows += '  <tr>\n'
-            rows += f'    <td align="center" width="20%" padding="10">\n'
+            rows += f'    <td align="center" width="20%" style="padding:10px">\n'
             rows += f'      <a href="{badge["href"]}">\n'
             rows += f'        <img src="{badge["img"]}" width="100">\n'
             rows += f'      </a><br>\n'
             rows += f'      <a href="{badge["href"]}">{badge["title"]} - {badge["issuer"]}</a>\n'
-            rows += f'    </td>\n'
-            rows += f'    <td width="80%" padding="10">\n'
-            rows += f'      <strong>Description:</strong> {self.twenty_word_limit(badge["description"])} <a href="{badge["href"]}">Read more here</a><br>\n'
-            # Only render up to 5 skills
-            if badge["skills"]:
-                if len(badge["skills"]) > 5:
-                    badge["skills"] = badge["skills"][:5]
-            rows += f'      <strong>Skills:</strong> {", ".join(badge["skills"])}<br>\n'
-            rows += f'      <strong>Criteria:</strong> {self.twenty_word_limit(badge["criteria"])} <a href="{badge["href"]}">Read more here</a><br>\n'
+            rows += '    </td>\n'
+            rows += f'    <td width="80%" style="padding:10px">\n'
+            rows += f'      <strong>Description:</strong> {desc} <a href="{badge["href"]}">Read more here</a><br>\n'
+            # Only first 5 skills
+            skills = badge["skills"][:5] if badge["skills"] else []
+            rows += f'      <strong>Skills:</strong> {", ".join(skills)}<br>\n'
+            rows += f'      <strong>Criteria:</strong> {criteria} <a href="{badge["href"]}">Read more here</a><br>\n'
             rows += f'      <strong>Time to Earn:</strong> {badge.get("time_to_earn", "N/A")}<br>\n'
             rows += f'      <strong>Level:</strong> {badge.get("level", "N/A")}\n'
-            rows += f'    </td>\n'
+            rows += '    </td>\n'
             rows += '  </tr>\n'
         return rows
 
