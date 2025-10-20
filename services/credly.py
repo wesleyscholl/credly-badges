@@ -80,19 +80,14 @@ class Credly:
         return [self.convert_to_dict(badge) for badge in badges]
 
     def twenty_word_limit(self, text):
-        """Helper function to limit text to less than or equal to 20 words, otherwise returns just the first 20 words"""
         words = text.split()
-        if len(words) <= 20:
-            return text, None
-        else:
-            limited_text = " ".join(words[:20]) + "..."
-            return limited_text
+        return " ".join(words[:20]) + ("..." if len(words) > 20 else "")
 
     def generate_badge_rows(self, badges):
         rows = ""
         for badge in badges:
-            desc, _ = self.twenty_word_limit(badge["description"])
-            criteria, _ = self.twenty_word_limit(badge["criteria"])
+            desc = self.twenty_word_limit(badge["description"])
+            criteria = self.twenty_word_limit(badge["criteria"])
             rows += '  <tr>\n'
             rows += f'    <td align="center" width="20%" style="padding:10px">\n'
             rows += f'      <a href="{badge["href"]}">\n'
