@@ -24,7 +24,7 @@ def org_logos(issuer):
         "Dremio": "https://images.credly.com/size/200x200/images/3627d9c5-d7db-4d16-8a70-18a0587a4775/organization-600x600.png",
         "Extreme Networks": "https://images.credly.com/size/200x200/images/f4a679e4-a683-4475-8f1e-3e36d05d2a38/blob.png",
         "Google Cloud": "https://images.credly.com/size/200x200/images/ca55a8cf-9e9c-47e3-9378-d225d63dd1e5/blob.png",
-        "Hewlett Packard Enterprise": "https://images.credly.com/size/200x200/images/e18e9c8e-9303-4c7d-9fd6-cbb222bc64c2/HPE_logo.png",
+        "Hewlett Packard Enterprise": "https://images.credly.com/size/400x400/images/0b1ac27e-e848-4d65-adfc-625bbd9a79f9/blob",
         "Hyperexponential": "https://images.credly.com/size/400x400/images/4b69f1aa-55d1-486d-9cae-35029d734c94/blob",
         "IBM": "https://images.credly.com/size/200x200/images/854d76bf-4f74-4d51-98a0-d969214bfba7/IBM%2BLogo%2Bfor%2BAcclaim%2BProfile.png",
         "IBM SkillsBuild": "https://images.credly.com/size/200x200/images/adc55fbb-55a1-425c-b133-6ed5b83f5d38/blob.png",
