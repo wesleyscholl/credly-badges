@@ -159,7 +159,7 @@ class Credly:
                 markdown += "<tr>\n"
             logo = org_logos(issuer)
             link = org_links(issuer)
-            anchor = issuer.lower().replace(" ", "-").replace(".", "")
+            anchor = issuer.lower().replace(" ", "-").replace(".", "").replace("-training-and-certification", "")
             badge_count = len(grouped_badges[issuer])
             markdown += '  <td align="center" width="20%" padding="10">\n'
             if logo and link:
