@@ -92,16 +92,16 @@ class Credly:
             rows += f'    <td align="center" width="20%" style="padding:10px">\n'
             rows += f'      <a href="{badge["href"]}">\n'
             rows += f'        <img src="{badge["img"]}" width="100">\n'
-            rows += f'      </a><br>\n'
+            rows += f'      </a><br/>\n'
             rows += f'      <a href="{badge["href"]}">{badge["title"]} - {badge["issuer"]}</a>\n'
             rows += '    </td>\n'
             rows += f'    <td width="80%" style="padding:10px">\n'
-            rows += f'      <strong>Description:</strong> {desc} <a href="{badge["href"]}">Read more here</a><br>\n'
+            rows += f'      <strong>Description:</strong> {desc} <a href="{badge["href"]}">Read more here</a><br/>\n'
             # Only first 5 skills
             skills = badge["skills"][:5] if badge["skills"] else []
-            rows += f'      <strong>Skills:</strong> {", ".join(skills)}<br>\n'
-            rows += f'      <strong>Criteria:</strong> {criteria} <a href="{badge["href"]}">Read more here</a><br>\n'
-            rows += f'      <strong>Time to Earn:</strong> {badge.get("time_to_earn", "N/A")}<br>\n'
+            rows += f'      <strong>Skills:</strong> {", ".join(skills)}<br/>\n'
+            rows += f'      <strong>Criteria:</strong> {criteria} <a href="{badge["href"]}">Read more here</a><br/>\n'
+            rows += f'      <strong>Time to Earn:</strong> {badge.get("time_to_earn", "N/A")}<br/>\n'
             rows += f'      <strong>Level:</strong> {badge.get("level", "N/A")}\n'
             rows += '    </td>\n'
             rows += '  </tr>\n'
@@ -120,12 +120,12 @@ class Credly:
             rows += '  <tr>\n'
             rows += f'    <td align="center" width="20%" style="padding:10px">\n'
             rows += f'      <a href="{badge["href"]}">\n'
-            rows += f'        <img src="{badge["img"]}" width="100">\n'
-            rows += f'      </a><br>\n'
+            rows += f'        <img src="{badge["img"]}" width="100"/>\n'
+            rows += f'      </a><br/>\n'
             rows += f'      <a href="{badge["href"]}">{badge["title"]} - {badge["issuer"]}</a>\n'
             rows += f'    </td>\n'
             rows += f'    <td width="80%" style="padding:10px">\n'
-            rows += f'      <strong>Read more <a href="{badge["href"]}">here</a><br>\n'
+            rows += f'      <strong>Read more:</strong> <a href="{badge["href"]}">here</a><br/>\n'
             rows += f'    </td>\n'
             rows += '  </tr>\n'
         return rows
@@ -161,7 +161,7 @@ class Credly:
             if logo and link:
                 markdown += f'    <a href="{link}">\n'
                 markdown += f'      <img src="{logo}" width="100">\n'
-                markdown += f'    </a><br>\n'
+                markdown += f'    </a><br/>\n'
                 markdown += f'    <a href="#{anchor}-{badge_count}">{issuer}</a>\n'
             else:
                 markdown += f'    {issuer}\n'
@@ -174,7 +174,7 @@ class Credly:
             for _ in range(5 - cell_count):
                 markdown += '  <td></td>\n'
             markdown += "</tr>\n"
-        markdown += "</table>\n\n"  # <-- make sure summary table is fully closed
+        markdown += "</table>\n\n\n"  # <-- make sure summary table is fully closed
     
         # --- Link list to issuers ---
         for issuer in unique_issuers:
@@ -191,21 +191,21 @@ class Credly:
             # Header table for issuer info
             markdown += "| Issuing Organization | Description | Credly Badges | Verified | Organization Link |\n"
             markdown += "|        :---:         |-------------|     :---:     |   :---:  |       :---:       |\n"
-            markdown += f"| <img src='{org_logos(issuer)}' height='100' /><br>[{issuer}](#{anchor}-{len(badges)}) | {org_descriptions(issuer)} | {len(badges)} | ✅ | [{issuer}]({org_links(issuer)}) |\n\n"
+            markdown += f"| <img src='{org_logos(issuer)}' height='100' /><br/>[{issuer}](#{anchor}-{len(badges)}) | {org_descriptions(issuer)} | {len(badges)} | ✅ | [{issuer}]({org_links(issuer)}) |\n\n"
     
             # --- First 3 badges ---
             markdown += '<table width="100%" border="1" cellspacing="0" cellpadding="4">\n'
             markdown += '  <tr>\n    <th width="20%">Badge</th>\n    <th width="80%">Description</th>\n  </tr>\n'
             markdown += self.generate_badge_rows(badges[:3])
-            markdown += '</table>\n\n'  # <-- ensure table is fully closed
+            markdown += '</table>\n\n\n'  # <-- ensure table is fully closed
     
             # --- Remaining badges in <details> ---
             if len(badges) > 3:
-                markdown += f'<details><summary>More {issuer} ({len(badges) - 3})</summary>\n\n'
+                markdown += f'\n\n<details><summary>More {issuer} ({len(badges) - 3})</summary>\n\n'
                 markdown += '<table width="100%" border="1" cellspacing="0" cellpadding="4">\n'
                 markdown += '  <tr>\n    <th width="20%">Badge</th>\n    <th width="80%">Description</th>\n  </tr>\n'
                 markdown += self.generate_hidden_badge_rows(badges[3:])
-                markdown += '</table>\n\n'
+                markdown += '</table>\n\n\n'
                 markdown += '</details>\n\n'  # <-- make sure <details> is closed
 
         # Print tail of the markdown
