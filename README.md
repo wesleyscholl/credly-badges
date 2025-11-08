@@ -4,7 +4,7 @@ Add badges only from [Credly](https://www.credly.com/) (for now), in [your Readm
 
 _Attention: the data access is public, but it is the individual responsibility of whoever shares the reported data_
 
-## Prep Work
+## Prerequisites 
 
 1. You need to update the markdown file(.md) with 2 comments. You can refer [here](#update-your-readme) for updating it.
 
