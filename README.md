@@ -1,5 +1,8 @@
 ![alt text](https://github.com/pemtajo/badge-readme/blob/main/blob/screenshot-readme.png?raw=true)
 # badge-readme
+
+**Status**: Automated Credly badge integration system - successfully displaying professional certifications across GitHub profiles with scheduled updates.
+
 Add badges only from [Credly](https://www.credly.com/) (for now), in [your Readme](https://docs.github.com/en/github/setting-up-and-managing-your-github-profile/customizing-your-profile/managing-your-profile-readme).
 
 _Attention: the data access is public, but it is the individual responsibility of whoever shares the reported data_
